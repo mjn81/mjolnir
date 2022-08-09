@@ -1,7 +1,9 @@
 import express from 'express';
 import { config } from 'dotenv';
-import cors from 'cors';
-import { test } from './routers';
+
+import { fileRouter } from './routers';
+import { uploadeMiddleware } from './middlewares';
+import { corsMiddleware } from './middlewares/cors';
 
 config({
   path:
@@ -14,11 +16,17 @@ const PORT = process.env.PORT || 3000;
 
 const main = async () => {
   const app = express();
-  app.use(cors());
-  console.log(test);
 
+  // middlewares
+  app.use(corsMiddleware);
   app.use(express.json());
+  app.use('/files', uploadeMiddleware);
   app.use(express.urlencoded({ extended: true }));
+
+  // routers
+  app.use('/files', fileRouter);
+
+  // start server
   app.listen(PORT, () => {
     console.log(`Server started on port ${PORT}`);
   });

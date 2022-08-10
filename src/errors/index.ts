@@ -1,3 +1,4 @@
 export * from './ValidationError';
 export * from './CustomError';
-export * from './FileUploadError';
+export * from './FileError';
+export * from './ServerError';

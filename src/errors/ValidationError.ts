@@ -24,3 +24,24 @@ export class ValidationError extends CustomError {
     ];
   }
 }
+
+export class SingleValidationError extends CustomError {
+  errorCode = 422;
+  errorType = 'VALIDATION_ERROR';
+
+  constructor(message: string) {
+    super(message);
+    Object.setPrototypeOf(
+      this,
+      ValidationError.prototype,
+    );
+  }
+
+  serializeErrors() {
+    return [
+      {
+        message: this.message,
+      },
+    ];
+  }
+}

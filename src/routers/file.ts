@@ -1,13 +1,8 @@
 import { Router } from 'express';
 
-import {
-  playgroundController,
-  uploadController,
-} from '../controllers';
+import { uploadController } from '../controllers';
 
 const router = Router();
-
-router.get('/playground', playgroundController);
 
 router.post('/', uploadController);
 

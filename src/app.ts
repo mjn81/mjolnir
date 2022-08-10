@@ -1,8 +1,12 @@
 import express from 'express';
 import { config } from 'dotenv';
+import 'express-async-errors';
 
 import { fileRouter } from './routers';
-import { uploadeMiddleware } from './middlewares';
+import {
+  errorHandler,
+  uploadeMiddleware,
+} from './middlewares';
 import { corsMiddleware } from './middlewares/cors';
 
 config({
@@ -22,9 +26,11 @@ const main = async () => {
   app.use(express.json());
   app.use('/files', uploadeMiddleware);
   app.use(express.urlencoded({ extended: true }));
-
   // routers
   app.use('/files', fileRouter);
+
+  // error Handler
+  app.use(errorHandler);
 
   // start server
   app.listen(PORT, () => {

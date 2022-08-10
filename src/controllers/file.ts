@@ -1,18 +1,22 @@
+import { Request, Response } from 'express';
+
 import fileUpload from 'express-fileupload';
 import { v4 } from 'uuid';
 import path from 'path';
+import { FileUploadError } from '../errors';
+// import { prisma } from 'database';
 
 export const uploadController = async (
-  req,
-  res,
+  req: Request,
+  res: Response,
 ) => {
   if (
     !req.files ||
     Object.keys(req.files).length === 0
   ) {
-    return res
-      .status(400)
-      .send('No files were uploaded.');
+    throw new FileUploadError(
+      'No files were uploaded.',
+    );
   }
   const file = req.files
     .file as fileUpload.UploadedFile;
@@ -30,6 +34,9 @@ export const uploadController = async (
   });
 };
 
-export const playgroundController = (_, res) => {
+export const playgroundController = (
+  _req: Request,
+  res: Response,
+) => {
   res.send({ message: 'Hello World' });
 };

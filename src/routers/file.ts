@@ -1,7 +1,6 @@
 import { Router } from 'express';
 import {
   paramsValidator,
-  // queryValidator,
   upload,
 } from '../middlewares';
 

@@ -2,13 +2,13 @@ import express from 'express';
 import { config } from 'dotenv';
 import 'express-async-errors';
 
+import { connectMongo } from './database';
 import {
   fileRouter,
   authRouter,
   playgroundRouter,
   categoryRouter,
 } from './routers';
-
 import {
   errorHandler,
   corsMiddleware,
@@ -36,6 +36,7 @@ declare global {
 }
 
 const main = () => {
+  connectMongo();
   const app = express();
 
   // middlewares

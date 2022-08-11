@@ -6,14 +6,14 @@ import {
 
 export const catCreateSchema = Joi.object({
   name: Joi.string().required(),
-});
+}).required();
 
 export const catUpdateSchema = Joi.object({
   userName: Joi.string().required(),
   fullName: Joi.string().required(),
   email: Joi.string().email().required(),
   password: Joi.string().min(5).max(9).required(),
-});
+}).required();
 
 export interface ICatCreateSchema
   extends ValidatedRequestSchema {

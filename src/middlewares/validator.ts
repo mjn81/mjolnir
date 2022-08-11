@@ -7,3 +7,7 @@ export const validator = createValidator({
 });
 
 export const bodyValidator = validator.body;
+
+export const queryValidator = validator.query;
+
+export const paramsValidator = validator.params;

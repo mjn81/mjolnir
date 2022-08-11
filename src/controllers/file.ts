@@ -1,4 +1,6 @@
 import { Request, Response } from 'express';
+import { ValidatedRequest } from 'express-joi-validation';
+import fs from 'fs';
 
 import {
   FileUploadError,
@@ -7,6 +9,7 @@ import {
 import { MESSAGES } from '../constants';
 import { prisma } from '../database';
 import { roleBaseAuth } from '../helpers';
+import { IFileServeSchema } from '../schemas';
 
 class FileController {
   async upload(req: Request, res: Response) {
@@ -52,7 +55,34 @@ class FileController {
     });
   }
 
-  async serve(_req: Request, _res: Response) {}
+  async serve(
+    req: ValidatedRequest<IFileServeSchema>,
+    res: Response,
+  ) {
+    const user = await roleBaseAuth(
+      prisma,
+      req.user,
+    );
+    const { id } = req.params;
+    const file =
+      await prisma.files.findFirstOrThrow({
+        where: {
+          AND: [
+            {
+              id,
+            },
+            {
+              user: {
+                id: user.id,
+              },
+            },
+          ],
+        },
+      });
+
+    res.setHeader('Content-Type', file.mimeType);
+    fs.createReadStream(file.path).pipe(res);
+  }
 }
 
 export const fileController =

@@ -17,4 +17,3 @@ export const pathExist = (
 ): boolean => {
   return fs.existsSync(path);
 };
-

@@ -1,14 +1,14 @@
 import { Router } from 'express';
 import { upload } from '../middlewares';
 
-import { uploadController } from '../controllers';
+import { fileController } from '../controllers';
 
 const router = Router();
 
 router.post(
   '/',
   upload.single('file'),
-  uploadController,
+  fileController.upload,
 );
 
 export const fileRouter = router;

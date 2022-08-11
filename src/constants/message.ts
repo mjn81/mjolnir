@@ -7,4 +7,11 @@ export const MESSAGES = {
   USER_EXISTS: 'User already exists!!',
   LOGIN_SUCCESS: 'Login successful!!',
   REGISTER_SUCCESS: 'Registered successfully!!',
+  WRONG_BEARER: 'Wrong bearer token.',
+  UNAUTHORIZED: 'Unauthorized!!',
+  INSUFFICIENT_PERMISSION:
+    'Insufficient permission!!',
+
+  CATEGORY_CREATED: 'Category created!!',
+  CATEGORY_UPDATED: 'Category updated!!',
 };

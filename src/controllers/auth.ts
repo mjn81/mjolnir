@@ -23,6 +23,7 @@ export const loginController = async (
   res: Response,
 ) => {
   const { email, password } = req.body;
+
   const user =
     await prisma.users.findUniqueOrThrow({
       where: {

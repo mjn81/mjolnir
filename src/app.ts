@@ -6,11 +6,13 @@ import {
   fileRouter,
   authRouter,
   playgroundRouter,
+  categoryRouter,
 } from './routers';
 
 import {
   errorHandler,
   corsMiddleware,
+  userAuthMiddleware,
 } from './middlewares';
 
 config({
@@ -22,6 +24,17 @@ config({
 
 const PORT = process.env.PORT || 3000;
 
+declare global {
+  namespace Express {
+    interface Request {
+      user?: {
+        id: string;
+        email: string;
+      };
+    }
+  }
+}
+
 const main = () => {
   const app = express();
 
@@ -29,12 +42,12 @@ const main = () => {
   app.use(corsMiddleware);
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
-
+  app.use(userAuthMiddleware);
   // routers
   app.use('/file', fileRouter);
   app.use('/playground', playgroundRouter);
   app.use('/auth', authRouter);
-
+  app.use('/category', categoryRouter);
   // error Handler
   app.use(errorHandler);
 

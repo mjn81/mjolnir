@@ -1,27 +1,28 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
+import { ValidatedRequest } from 'express-joi-validation';
 
 import { MESSAGES } from '../constants';
-import { SingleValidationError, ValidationError } from '../errors';
 import {
-  concat,
+  SingleValidationError,
+  ValidationError,
+} from '../errors';
+import {
   createToken,
   hashVerify,
   hash,
 } from '../utils';
 import { prisma } from '../database';
+import {
+  ILoginSchema,
+  IRegisterSchema,
+} from '../schemas';
 
 // phase 2 : add refresh token
 export const loginController = async (
-  req: Request,
+  req: ValidatedRequest<ILoginSchema>,
   res: Response,
 ) => {
   const { email, password } = req.body;
-  if (!email || !password)
-    throw new ValidationError(
-      MESSAGES['FIELD_EMPTY'],
-      concat(['email', 'password']),
-    );
-
   const user =
     await prisma.users.findUniqueOrThrow({
       where: {
@@ -56,26 +57,11 @@ export const loginController = async (
 };
 
 export const registerController = async (
-  req: Request,
+  req: ValidatedRequest<IRegisterSchema>,
   res: Response,
 ) => {
   const { fullName, userName, email, password } =
     req.body;
-  if (
-    !fullName ||
-    !userName ||
-    !email ||
-    !password
-  )
-    throw new ValidationError(
-      MESSAGES['FIELD_EMPTY'],
-      concat([
-        'fullName',
-        'userName',
-        'email',
-        'password',
-      ]),
-    );
 
   const user = await prisma.users.findUnique({
     where: {

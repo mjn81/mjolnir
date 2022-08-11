@@ -1,20 +1,21 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
+import { ValidatedRequest } from 'express-joi-validation';
 
 import fileUpload from 'express-fileupload';
 import {
   FileUploadError,
   ServerError,
-  ValidationError,
 } from '../errors';
 import { MESSAGES } from '../constants';
-import { createFilePath, concat } from '../utils';
+import { createFilePath } from '../utils';
 import { prisma } from '../database';
+import { IFileUploadSchema } from 'schemas';
 
 export const uploadController = async (
-  req: Request,
+  req: ValidatedRequest<IFileUploadSchema>,
   res: Response,
 ) => {
-  const { name, categories } = req.body;
+  const { name, category } = req.body;
   if (
     !req.files ||
     Object.keys(req.files).length === 0
@@ -23,11 +24,6 @@ export const uploadController = async (
       MESSAGES['FILE_EMPTY'],
     );
   }
-  if (!name || !categories)
-    throw new ValidationError(
-      MESSAGES['FIELD_EMPTY'],
-      concat(['name', 'categories']),
-    );
 
   const file = req.files
     .file as fileUpload.UploadedFile;
@@ -37,7 +33,7 @@ export const uploadController = async (
       name,
       path,
       category: {
-        connect: categories,
+        connect: category,
       },
       user: {},
     },

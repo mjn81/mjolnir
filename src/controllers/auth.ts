@@ -47,6 +47,7 @@ export const loginController = async (
   });
 
   res.send({
+    message: MESSAGES['LOGIN_SUCCESS'],
     token,
     user: {
       id: user.id,
@@ -91,6 +92,7 @@ export const registerController = async (
   });
 
   res.send({
+    message: MESSAGES['REGISTER_SUCCESS'],
     token,
     user: {
       id: newUser.id,

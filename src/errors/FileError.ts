@@ -2,7 +2,7 @@ import { ERROR_CODE } from '../constants';
 import { CustomError } from './CustomError';
 
 export class FileUploadError extends CustomError {
-  errorCode = ERROR_CODE['FILE_UPLOAD_ERROR'];
+  errorCode = ERROR_CODE['BAD_REQUEST'];
   errorType = 'FILE_UPLOAD_ERROR';
   constructor(messgae: string) {
     super(messgae);

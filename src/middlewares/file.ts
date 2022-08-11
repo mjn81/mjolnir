@@ -1,17 +1,6 @@
-import fileUpload from 'express-fileupload';
-import path from 'path';
+import multer from 'multer';
+import { uploadPath } from '../utils';
 
-export const uploadeMiddleware = fileUpload({
-  debug: true,
-  limits: {
-    fileSize: 100000000,
-    fieldNameSize: 100,
-  },
-  useTempFiles: true,
-  tempFileDir: path.resolve(
-    __dirname,
-    '..',
-    '..',
-    'tmp',
-  ),
+export const upload = multer({
+  dest: uploadPath,
 });

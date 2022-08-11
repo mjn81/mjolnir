@@ -1,14 +1,13 @@
 import { Router } from 'express';
+import { upload } from '../middlewares';
 
-import { bodyValidator } from '../middlewares';
-import { fileUploadSchema } from '../schemas';
 import { uploadController } from '../controllers';
 
 const router = Router();
 
 router.post(
   '/',
-  bodyValidator(fileUploadSchema),
+  upload.single('file'),
   uploadController,
 );
 

@@ -11,7 +11,6 @@ import {
 import {
   errorHandler,
   corsMiddleware,
-  uploadeMiddleware,
 } from './middlewares';
 
 config({
@@ -29,7 +28,6 @@ const main = () => {
   // middlewares
   app.use(corsMiddleware);
   app.use(express.json());
-  app.use('/files', uploadeMiddleware);
   app.use(express.urlencoded({ extended: true }));
 
   // routers

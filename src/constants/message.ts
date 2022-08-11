@@ -5,4 +5,6 @@ export const MESSAGES = {
   FIELD_EMPTY: 'One or more fields are empty.',
   WRONG_PASSWORD: 'Wrong password.',
   USER_EXISTS: 'User already exists!!',
+  LOGIN_SUCCESS: 'Login successful!!',
+  REGISTER_SUCCESS: 'Registered successfully!!',
 };

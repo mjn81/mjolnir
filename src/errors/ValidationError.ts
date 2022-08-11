@@ -2,7 +2,7 @@ import { ERROR_CODE } from '../constants';
 import { CustomError } from './CustomError';
 
 export class ValidationError extends CustomError {
-  errorCode = ERROR_CODE['VALIDATION_ERROR'];
+  errorCode = ERROR_CODE['BAD_REQUEST'];
   errorType = 'VALIDATION_ERROR';
 
   constructor(
@@ -27,7 +27,7 @@ export class ValidationError extends CustomError {
 }
 
 export class SingleValidationError extends CustomError {
-  errorCode = ERROR_CODE['VALIDATION_ERROR'];
+  errorCode = ERROR_CODE['BAD_REQUEST'];
   errorType = 'VALIDATION_ERROR';
 
   constructor(message: string) {

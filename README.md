@@ -4,6 +4,7 @@ file Api mjolnir - subpart of muselib
 
 ## TODO
 
-- [ ] add - migrate prisma functionality on it
-- [ ] create authentication
-- [ ] cleanup the code + add modularity
+- [x] add - migrate prisma functionality on it
+- [x] create authentication
+- [x] cleanup the code + add modularity
+- [x] phase 1 complete!.

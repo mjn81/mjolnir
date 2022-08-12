@@ -40,6 +40,21 @@ export default {
         summary: 'Create a new category',
         description: 'create new category',
         operationId: 'create-category',
+        requestBody: {
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                properties: {
+                  name: {
+                    type: 'string',
+                    example: 'cat 1',
+                  },
+                },
+              },
+            },
+          },
+        },
         responses: {
           200: {
             description: 'Success',
@@ -70,6 +85,34 @@ export default {
         summary: 'Update a category',
         description: 'update category',
         operationId: 'update-category',
+        parameters: [
+          {
+            name: 'id',
+            in: 'path',
+            description: 'category id',
+            required: true,
+            schema: {
+              type: 'string',
+              format: 'uuid',
+            },
+          },
+        ],
+        requestBody: {
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                properties: {
+                  name: {
+                    type: 'string',
+                    example: 'cat 1',
+                  },
+                },
+              },
+            },
+          },
+        },
+
         responses: {
           '200': {
             description: 'Success',

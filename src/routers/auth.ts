@@ -21,4 +21,9 @@ router.post(
   authController.register,
 );
 
+router.get(
+  '/distToken',
+  authController.distToken,
+);
+
 export const authRouter = router;

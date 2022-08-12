@@ -1,4 +1,4 @@
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { ValidatedRequest } from 'express-joi-validation';
 
 import { MESSAGES } from '../constants';
@@ -16,6 +16,7 @@ import {
   ILoginSchema,
   IRegisterSchema,
 } from '../schemas';
+import { roleBaseAuth } from '../helpers';
 
 // phase 2 : add refresh token
 
@@ -105,6 +106,28 @@ class AuthController {
         id: newUser.id,
         userName: newUser.userName,
         email: newUser.email,
+      },
+    });
+  }
+
+  async distToken(req: Request, res: Response) {
+    const user = await roleBaseAuth(
+      prisma,
+      req.user,
+    );
+    const token = createToken({
+      username: user.userName,
+      id: user.id,
+    });
+
+    res.send({
+      message:
+        MESSAGES['DISTRIBUTOR_TOKEN_SUCCESS'],
+      token,
+      user: {
+        id: user.id,
+        userName: user.userName,
+        email: user.email,
       },
     });
   }

@@ -14,13 +14,13 @@ import {
 
 const router = Router();
 
+router.get('/', fileController.list);
+
 router.post(
   '/',
   upload.single('file'),
   fileController.upload,
 );
-
-router.get('/all', fileController.list);
 
 router.get(
   '/:id',

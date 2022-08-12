@@ -1,7 +1,10 @@
 import express from 'express';
 import { config } from 'dotenv';
+import swaggerUi from 'swagger-ui-express';
 import 'express-async-errors';
+import helmet from 'helmet';
 
+import swaggerDoc from './docs';
 import {
   fileRouter,
   authRouter,
@@ -12,17 +15,9 @@ import {
   errorHandler,
   corsMiddleware,
   userAuthMiddleware,
+  logMiddleware,
 } from './middlewares';
 import { createMongo } from './database';
-
-config({
-  path:
-    process.env.NODE_ENV === 'production'
-      ? '.env.production'
-      : '.env.development',
-});
-
-const PORT = process.env.PORT || 3000;
 
 declare global {
   namespace Express {
@@ -34,17 +29,47 @@ declare global {
     }
   }
 }
+config({
+  path:
+    process.env.NODE_ENV === 'production'
+      ? '.env.production'
+      : '.env.development',
+});
+
+const PORT = process.env.PORT || 3000;
+
+const SWAGGER_OPTS = {
+  customSiteTitle: 'Mjolnir API - file upload',
+  customfavIcon:
+    (process.env.BASE_HREF + '/' || '/') +
+    'favicon.ico?v=1',
+  customCss:
+    '.swagger-ui .topbar { display: none }',
+};
 
 const main = () => {
   createMongo();
   const app = express();
 
   // middlewares
+  app.use(
+    helmet({
+      frameguard: true,
+      noSniff: true,
+      hsts: true,
+    }),
+  );
+  app.use(logMiddleware());
   app.use(corsMiddleware);
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
   app.use(userAuthMiddleware);
   // routers
+  app.use(
+    '/api/doc',
+    swaggerUi.serve,
+    swaggerUi.setup(swaggerDoc, SWAGGER_OPTS),
+  );
   app.use('/file', fileRouter);
   app.use('/playground', playgroundRouter);
   app.use('/auth', authRouter);

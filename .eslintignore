@@ -1,1 +1,14 @@
 node_modules
+*.lock
+*.log
+
+dist
+
+# text files
+*.md
+*.txt
+
+# compiled binaries
+*.zip
+*.gz
+*.tar

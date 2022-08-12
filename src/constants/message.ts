@@ -14,4 +14,5 @@ export const MESSAGES = {
 
   CATEGORY_CREATED: 'Category created!!',
   CATEGORY_UPDATED: 'Category updated!!',
+  SERVER_ERROR: 'Something went wrong',
 };

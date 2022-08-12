@@ -1,13 +1,14 @@
 import { Request, Response } from 'express';
 import { ValidatedRequest } from 'express-joi-validation';
-import fs from 'fs';
+import { GridFSBucket, ObjectId } from 'mongodb';
+import { Readable } from 'stream';
 
 import {
   FileUploadError,
   ValidationError,
 } from '../errors';
 import { MESSAGES } from '../constants';
-import { prisma } from '../database';
+import { getMongo, prisma } from '../database';
 import { roleBaseAuth } from '../helpers';
 import { IFileServeSchema } from '../schemas';
 
@@ -32,10 +33,29 @@ class FileController {
       );
     }
 
+    const readableFileStream = new Readable();
+    readableFileStream.push(file.buffer);
+    readableFileStream.push(null);
+
+    const db = getMongo();
+    const bucket = new GridFSBucket(db, {
+      bucketName: 'files',
+    });
+
+    let uploadStream =
+      bucket.openUploadStream(name);
+    const { id } = uploadStream;
+    readableFileStream.pipe(uploadStream);
+    uploadStream.on('error', () => {
+      throw new FileUploadError(
+        MESSAGES['SERVER_ERROR'],
+      );
+    });
+
     const fileData = await prisma.files.create({
       data: {
         name: name ?? file.originalname,
-        path: file.path,
+        path: id.toString(),
         mimeType: file.mimetype,
         category: {
           connect: {
@@ -49,6 +69,7 @@ class FileController {
         },
       },
     });
+
     res.send({
       message: MESSAGES['FILE_UPLOADED'],
       data: fileData,
@@ -80,8 +101,27 @@ class FileController {
         },
       });
 
+    const fileId = new ObjectId(file.path);
+
     res.setHeader('Content-Type', file.mimeType);
-    fs.createReadStream(file.path).pipe(res);
+    res.setHeader('Accepted-Ranges', 'bytes');
+
+    const db = getMongo();
+    const bucket = new GridFSBucket(db, {
+      bucketName: 'files',
+    });
+    const downloadStream =
+      bucket.openDownloadStream(fileId);
+    downloadStream.on('data', (chunk) => {
+      res.write(chunk);
+    });
+
+    downloadStream.on('error', (err) => {
+      throw new FileUploadError(err.message);
+    });
+    downloadStream.on('end', () => {
+      res.end();
+    });
   }
 }
 

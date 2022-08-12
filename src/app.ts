@@ -2,7 +2,6 @@ import express from 'express';
 import { config } from 'dotenv';
 import 'express-async-errors';
 
-import { connectMongo } from './database';
 import {
   fileRouter,
   authRouter,
@@ -14,6 +13,7 @@ import {
   corsMiddleware,
   userAuthMiddleware,
 } from './middlewares';
+import { createMongo } from './database';
 
 config({
   path:
@@ -36,7 +36,7 @@ declare global {
 }
 
 const main = () => {
-  connectMongo();
+  createMongo();
   const app = express();
 
   // middlewares

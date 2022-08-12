@@ -1,6 +1,5 @@
-import multer from 'multer';
-import { uploadPath } from '../utils';
+import multer, { memoryStorage } from 'multer';
 
 export const upload = multer({
-  dest: uploadPath,
+  storage: memoryStorage(),
 });

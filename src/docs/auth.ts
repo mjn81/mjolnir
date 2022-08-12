@@ -52,5 +52,32 @@ export default {
         },
       },
     },
+    '/auth/distToken': {
+      get: {
+        tags: ['auth'],
+        summary: 'Dist Token',
+        description:
+          'gives user an access token without expiring for distrobution purposes',
+        operationId: 'distToken',
+        responses: {
+          200: {
+            description: 'Success',
+            content: {
+              'application/json': {
+                message:
+                  'Dist Token successful!!',
+                token:
+                  'Token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1qbmFkbWluIiwiaWQiOiJjbDZwMzA2NGQwMDExYTJveGRxbm5icjAxIiwiaWF0IjoxNjYwMzI5NDIzLCJleHAiOjE2NjA0MTU4MjN9.wUW33VuQBrqHiuSz5SmjdtMe7gSWd0mFFc9W-zUhoJc',
+                user: {
+                  id: 'cl6qtaxnm0002ngoxoc1aelv4',
+                  userName: 'user1',
+                  email: '',
+                },
+              },
+            },
+          },
+        },
+      },
+    },
   },
 };

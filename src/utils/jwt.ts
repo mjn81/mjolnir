@@ -15,6 +15,17 @@ export const createToken = (payload: {
   return `Token ${token}`;
 };
 
+export const createDistToken = (payload: {
+  username: string;
+  id: string;
+}) => {
+  const token = jwt.sign(
+    payload,
+    process.env.JWT_SECRET ?? 'secret',
+  );
+  return `Token ${token}`;
+};
+
 export const verifyToken = (token: string) => {
   try {
     const payload = jwt.verify(

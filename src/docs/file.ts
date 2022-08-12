@@ -52,6 +52,33 @@ export default {
         summary: 'Upload file',
         description: 'upload file',
         operationId: 'upload',
+        requestBody: {
+          content: {
+            'multipart/form-data': {
+              schema: {
+                type: 'object',
+                properties: {
+                  name: {
+                    type: 'string',
+                    example: 'testfile',
+                  },
+                  category: {
+                    type: 'string',
+                    format: 'uuid',
+                    example:
+                      'cl6p33pfv0048a2oxzfw7jwmt',
+                  },
+                  file: {
+                    type: 'string',
+                    format: 'binary',
+                    description: 'file',
+                    required: true,
+                  },
+                },
+              },
+            },
+          },
+        },
         responses: {
           200: {
             description: 'Success',
@@ -80,6 +107,19 @@ export default {
         summary: 'Serve file',
         description: 'serve file',
         operationId: 'serve-file',
+        parameters: [
+          {
+            name: 'id',
+            in: 'path',
+            description: 'file id',
+            required: true,
+            schema: {
+              type: 'string',
+              format: 'uuid',
+            },
+          },
+        ],
+
         responses: {
           200: {
             description: 'Success',

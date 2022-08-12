@@ -12,8 +12,9 @@ import {
 
 const router = Router();
 
+router.get('/', categoryController.list);
 router.post('/', categoryController.create);
-router.patch(
+router.put(
   '/:id',
   paramsValidator(catUpdateParam),
   bodyValidator(catUpdateBody),

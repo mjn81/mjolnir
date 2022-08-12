@@ -142,6 +142,7 @@ class FileController {
     req: ValidatedRequest<IFileServeSchema>,
     res: Response,
   ) {
+    await roleBaseAuth(prisma, req.user);
     const { id } = req.params;
     const file = await prisma.files.delete({
       where: {
@@ -170,6 +171,7 @@ class FileController {
       prisma,
       req.user,
     );
+    const count = await prisma.files.count();
     const files = await prisma.files.findMany({
       where: {
         user: {
@@ -189,6 +191,7 @@ class FileController {
     });
     return res.send({
       files,
+      count,
     });
   }
 
@@ -200,11 +203,13 @@ class FileController {
       prisma,
       req.user,
     );
+    const { id } = req.params;
+
     await prisma.files.findFirstOrThrow({
       where: {
         AND: [
           {
-            id: req.params.id,
+            id: id,
           },
           {
             user: {
@@ -215,7 +220,6 @@ class FileController {
       },
     });
 
-    const { id } = req.params;
     const { name, category } = req.body;
     const updatedFile = await prisma.files.update(
       {

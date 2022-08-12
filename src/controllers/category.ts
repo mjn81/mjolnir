@@ -1,6 +1,5 @@
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { ValidatedRequest } from 'express-joi-validation';
-import { Role } from '@prisma/client';
 import { prisma } from '../database';
 import { roleBaseAuth } from '../helpers';
 import {
@@ -18,7 +17,6 @@ class CategoryController {
     const user = await roleBaseAuth(
       prisma,
       req.user,
-      [Role.ADMIN],
     );
     const { name } = req.body;
 
@@ -44,6 +42,7 @@ class CategoryController {
     req: ValidatedRequest<ICatUpdateSchema>,
     res: Response,
   ) {
+    await roleBaseAuth(prisma, req.user);
     const { id } = req.params;
     const { name } = req.body;
 
@@ -60,6 +59,30 @@ class CategoryController {
     res.send({
       message: MESSAGES['CATEGORY_UPDATED'],
       category,
+    });
+  }
+
+  async list(req: Request, res: Response) {
+    const user = await roleBaseAuth(
+      prisma,
+      req.user,
+    );
+    const count = await prisma.categories.count();
+    const categories =
+      await prisma.categories.findMany({
+        where: {
+          user: {
+            id: user.id,
+          },
+        },
+        include: {
+          _count: true,
+        },
+      });
+
+    res.send({
+      categories,
+      count,
     });
   }
 }

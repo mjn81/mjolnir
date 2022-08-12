@@ -18,6 +18,7 @@ import {
   logMiddleware,
 } from './middlewares';
 import { createMongo } from './database';
+import { PORT, SWAGGER_OPTS } from './constants';
 
 declare global {
   namespace Express {
@@ -35,17 +36,6 @@ config({
       ? '.env.production'
       : '.env.development',
 });
-
-const PORT = process.env.PORT || 3000;
-
-const SWAGGER_OPTS = {
-  customSiteTitle: 'Mjolnir API - file upload',
-  customfavIcon:
-    (process.env.BASE_HREF + '/' || '/') +
-    'favicon.ico?v=1',
-  customCss:
-    '.swagger-ui .topbar { display: none }',
-};
 
 const main = () => {
   createMongo();

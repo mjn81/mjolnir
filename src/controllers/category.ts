@@ -1,9 +1,12 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { ValidatedRequest } from 'express-joi-validation';
 import { Role } from '@prisma/client';
 import { prisma } from '../database';
 import { roleBaseAuth } from '../helpers';
-import { ICatCreateSchema } from '../schemas';
+import {
+  ICatCreateSchema,
+  ICatUpdateSchema,
+} from '../schemas';
 
 import { MESSAGES } from '../constants';
 
@@ -37,7 +40,10 @@ class CategoryController {
     });
   }
 
-  async update(req: Request, res: Response) {
+  async update(
+    req: ValidatedRequest<ICatUpdateSchema>,
+    res: Response,
+  ) {
     const { id } = req.params;
     const { name } = req.body;
 

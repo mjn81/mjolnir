@@ -7,17 +7,26 @@ import {
 export const catCreateSchema = Joi.object({
   name: Joi.string().required(),
 }).required();
-
-export const catUpdateSchema = Joi.object({
-  userName: Joi.string().required(),
-  fullName: Joi.string().required(),
-  email: Joi.string().email().required(),
-  password: Joi.string().min(5).max(9).required(),
-}).required();
-
 export interface ICatCreateSchema
   extends ValidatedRequestSchema {
   [ContainerTypes.Body]: {
     name: string;
+  };
+}
+
+export const catUpdateBody = Joi.object({
+  name: Joi.string().required(),
+}).required();
+export const catUpdateParam = Joi.object({
+  id: Joi.string().required(),
+}).required();
+
+export interface ICatUpdateSchema
+  extends ValidatedRequestSchema {
+  [ContainerTypes.Body]: {
+    name: string;
+  };
+  [ContainerTypes.Params]: {
+    id: string;
   };
 }

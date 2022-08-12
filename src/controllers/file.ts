@@ -10,7 +10,10 @@ import {
 import { MESSAGES } from '../constants';
 import { getMongo, prisma } from '../database';
 import { roleBaseAuth } from '../helpers';
-import { IFileServeSchema } from '../schemas';
+import {
+  IFileServeSchema,
+  IFileUpdateSchema,
+} from '../schemas';
 
 class FileController {
   async upload(req: Request, res: Response) {
@@ -42,7 +45,7 @@ class FileController {
       bucketName: 'files',
     });
 
-    let uploadStream =
+    const uploadStream =
       bucket.openUploadStream(name);
     const { id } = uploadStream;
     readableFileStream.pipe(uploadStream);
@@ -68,6 +71,16 @@ class FileController {
           },
         },
       },
+      select: {
+        id: true,
+        name: true,
+        category: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+      },
     });
 
     res.send({
@@ -84,6 +97,7 @@ class FileController {
       prisma,
       req.user,
     );
+
     const { id } = req.params;
     const file =
       await prisma.files.findFirstOrThrow({
@@ -121,6 +135,117 @@ class FileController {
     });
     downloadStream.on('end', () => {
       res.end();
+    });
+  }
+
+  async delete(
+    req: ValidatedRequest<IFileServeSchema>,
+    res: Response,
+  ) {
+    const { id } = req.params;
+    const file = await prisma.files.delete({
+      where: {
+        id,
+      },
+      select: {
+        id: true,
+        name: true,
+        path: true,
+      },
+    });
+    const db = getMongo();
+    const bucket = new GridFSBucket(db, {
+      bucketName: 'files',
+    });
+    const fileId = new ObjectId(file.path);
+    await bucket.delete(fileId);
+    return res.send({
+      message: MESSAGES['FILE_DELETED'],
+      file,
+    });
+  }
+
+  async list(req: Request, res: Response) {
+    const user = await roleBaseAuth(
+      prisma,
+      req.user,
+    );
+    const files = await prisma.files.findMany({
+      where: {
+        user: {
+          id: user.id,
+        },
+      },
+      select: {
+        id: true,
+        name: true,
+        category: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+      },
+    });
+    return res.send({
+      files,
+    });
+  }
+
+  async update(
+    req: ValidatedRequest<IFileUpdateSchema>,
+    res: Response,
+  ) {
+    const user = await roleBaseAuth(
+      prisma,
+      req.user,
+    );
+    await prisma.files.findFirstOrThrow({
+      where: {
+        AND: [
+          {
+            id: req.params.id,
+          },
+          {
+            user: {
+              id: user.id,
+            },
+          },
+        ],
+      },
+    });
+
+    const { id } = req.params;
+    const { name, category } = req.body;
+    const updatedFile = await prisma.files.update(
+      {
+        where: {
+          id,
+        },
+        data: {
+          name: name,
+          category: {
+            connect: {
+              id: category,
+            },
+          },
+        },
+        select: {
+          id: true,
+          name: true,
+          category: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+        },
+      },
+    );
+
+    return res.send({
+      message: MESSAGES['FILE_UPDATED'],
+      data: updatedFile,
     });
   }
 }

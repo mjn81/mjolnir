@@ -18,7 +18,7 @@ model Files {
   category     Categories? @relation(fields: [categoriesId], references: [id])
   createdAt    DateTime    @default(now())
   updatedAt    DateTime    @updatedAt
-  user         Users       @relation(fields: [usersId], references: [id])
+  user         Users       @relation(fields: [usersId], references: [id], onDelete: Cascade)
   categoriesId String?
   usersId      String
 }

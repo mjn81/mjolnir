@@ -15,4 +15,7 @@ export const MESSAGES = {
   CATEGORY_CREATED: 'Category created!!',
   CATEGORY_UPDATED: 'Category updated!!',
   SERVER_ERROR: 'Something went wrong',
+  FILE_DELETED: 'File deleted!!',
+  FILE_NOT_FOUND: 'File not found!!',
+  FILE_UPDATED: 'File Updated!!',
 };

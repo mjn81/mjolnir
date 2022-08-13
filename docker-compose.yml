@@ -1,0 +1,50 @@
+version: "3.8"
+services:
+  postgres:
+    image: postgres:14-alpine 
+    build:
+      tags:
+        - "postgres"
+    restart: always
+    container_name: postgres_c
+    ports:
+      - "5432:5432"
+    env_file:
+      - ./.db.env
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+  mongo:
+    image: mongo:5.0.10
+    build:
+      tags:
+        - "mongo"
+    restart: always
+    container_name: mongo_c
+    volumes:
+      - ./mongodata:/data/db
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      tags:
+        - "production"
+    container_name: api_c
+    depends_on:
+      - postgres
+      - mongo
+    ports:
+      - "4000:4000"
+  dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+      tags:
+        - "dev"
+    container_name: api_dev_c
+    depends_on:
+      - postgres
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/app
+      - /app/node_modules

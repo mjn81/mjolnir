@@ -10,7 +10,9 @@ RUN yarn install --frozen-lockfile
 
 COPY . .
 
-RUN yarn migrate:dep
+RUN yarn prisma generate
+
+RUN yarn prisma migrate
 
 RUN yarn build
 

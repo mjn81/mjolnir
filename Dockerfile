@@ -10,6 +10,8 @@ RUN yarn install --frozen-lockfile
 
 COPY . .
 
+RUN yarn migrate:dep
+
 RUN yarn build
 
 EXPOSE 4000

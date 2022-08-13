@@ -12,6 +12,8 @@ COPY . .
 
 RUN yarn build
 
+RUN yarn migrate:dep
+
 EXPOSE 4000
 
 CMD [ "yarn", "start" ]

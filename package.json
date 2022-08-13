@@ -10,6 +10,7 @@
   "scripts": {
     "dev": "NODE_ENV=development nodemon src/app.ts",
     "build": "tsc",
+    "migrate:dep": "prisma migrate deploy",
     "start": "NODE_ENV=production node dist/app.js",
     "format": "prettier --write '**/*.{ts,js,json,md}'",
     "lint": "eslint src/**/*.ts",

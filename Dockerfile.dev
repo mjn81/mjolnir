@@ -8,8 +8,6 @@ COPY yarn.lock ./
 
 COPY .env.development ./
 
-COPY .env ./
-
 RUN yarn install
 
 COPY . .

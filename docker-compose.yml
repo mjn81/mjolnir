@@ -36,25 +36,22 @@ services:
       - "4000:4000"
     networks:
       - backend
+  
+  dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+      tags:
+        - "development"
+    container_name: api_dev_c
+    depends_on:
+      - postgres
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/app
+      - /app/node_modules
 
 networks:
   backend:
     driver: bridge
-
-
-  # dev:
-  #   build:
-  #     context: .
-  #     dockerfile: Dockerfile.dev
-  #     tags:
-  #       - "dev"
-  #   container_name: api_dev_c
-  #   depends_on:
-  #     - postgres
-  #   ports:
-  #     - "5000:5000"
-  #   environment:
-  #     - NODE_ENV=development
-  #   volumes:
-  #     - .:/app
-  #     - /app/node_modules

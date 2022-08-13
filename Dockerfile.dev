@@ -16,8 +16,6 @@ COPY . .
 
 RUN yarn prisma generate
 
-RUN yarn prisma migrate
-
 EXPOSE 5000
 
 CMD [ "yarn", "dev" ]

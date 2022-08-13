@@ -14,9 +14,7 @@ RUN yarn install --frozen-lockfile
 
 COPY . .
 
-RUN yarn prisma generate
-
-RUN yarn prisma migrate
+RUN yarn prisma migrate deploy
 
 RUN yarn build
 

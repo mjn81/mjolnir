@@ -46,8 +46,6 @@ export const SWAGGER_OPTS = {
 };
 
 const main = () => {
-  console.log(process.env.MONGODB_URL);
-
   createMongo();
   const app = express();
   app.disable('x-powered-by');
@@ -57,7 +55,6 @@ const main = () => {
     helmet({
       frameguard: true,
       noSniff: true,
-      hsts: true,
     }),
   );
   app.use(logMiddleware());

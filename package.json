@@ -8,9 +8,9 @@
   "author": "mjn<mjjnn81@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "dev": "NODE_ENV=development nodemon src/app.ts",
+    "dev": "nodemon src/app.ts",
     "build": "tsc",
-    "start": "NODE_ENV=production node dist/app.js",
+    "start": "node dist/app.js",
     "format": "prettier --write '**/*.{ts,js,json,md}'",
     "lint": "eslint src/**/*.ts",
     "prepare": "husky install"

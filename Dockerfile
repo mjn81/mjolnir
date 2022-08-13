@@ -6,6 +6,10 @@ COPY package*.json ./
 
 COPY yarn.lock ./
 
+COPY .env.production ./
+
+COPY .env ./
+
 RUN yarn install --frozen-lockfile
 
 COPY . .

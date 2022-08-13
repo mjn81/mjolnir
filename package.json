@@ -12,6 +12,8 @@
     "build": "tsc",
     "start": "NODE_ENV=production node dist/app.js",
     "format": "prettier --write '**/*.{ts,js,json,md}'",
+    "migrate:dev": "dotenv -e .env.development -- yarn prisma migrate dev",
+    "migrate:prod": "dotenv -e .env.production -- yarn prisma migrate deploy",
     "lint": "eslint src/**/*.ts",
     "prepare": "husky install"
   },
@@ -20,6 +22,7 @@
     "argon2": "^0.28.7",
     "cors": "^2.8.5",
     "dotenv": "^16.0.1",
+    "dotenv-cli": "^6.0.0",
     "express": "^4.18.1",
     "express-async-errors": "^3.1.1",
     "express-joi-validation": "^5.0.1",

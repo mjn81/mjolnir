@@ -23,11 +23,13 @@ export const errorHandler = (
   if (
     error instanceof PrismaClientValidationError
   )
-    res.status(ERROR_CODE['BAD_REQUEST']).send({
-      errors: {
-        message: error.message,
-      },
-    });
+    return res
+      .status(ERROR_CODE['BAD_REQUEST'])
+      .send({
+        errors: {
+          message: error.message,
+        },
+      });
 
   if (
     error instanceof
@@ -36,7 +38,7 @@ export const errorHandler = (
     error instanceof
       PrismaClientUnknownRequestError
   ) {
-    res
+    return res
       .status(ERROR_CODE['INTERNAL_SERVER_ERROR'])
       .send({
         errors: {
@@ -44,9 +46,11 @@ export const errorHandler = (
         },
       });
   }
-  res.status(ERROR_CODE['BAD_REQUEST']).send({
-    errors: {
-      message: error.message,
-    },
-  });
+  return res
+    .status(ERROR_CODE['BAD_REQUEST'])
+    .send({
+      errors: {
+        message: error.message,
+      },
+    });
 };

@@ -4,12 +4,13 @@
   "description": "this is mjolnir file management api",
   "main": "src/app.ts",
   "private": true,
+  "repository": "https://github.com/mjn81/mjolnir",
   "author": "mjn<mjjnn81@gmail.com>",
   "license": "MIT",
   "scripts": {
     "dev": "NODE_ENV=development nodemon src/app.ts",
     "build": "tsc",
-    "run": "NODE_ENV=production node dist/app.js",
+    "start": "NODE_ENV=production node dist/app.js",
     "format": "prettier --write '**/*.{ts,js,json,md}'",
     "lint": "eslint src/**/*.ts",
     "prepare": "husky install"

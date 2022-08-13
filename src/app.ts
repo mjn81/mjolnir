@@ -18,7 +18,6 @@ import {
   logMiddleware,
 } from './middlewares';
 import { createMongo } from './database';
-import { PORT, SWAGGER_OPTS } from './constants';
 
 declare global {
   namespace Express {
@@ -37,7 +36,17 @@ config({
       : '.env.development',
 });
 
+export const PORT = process.env.PORT || 3000;
+
+export const SWAGGER_OPTS = {
+  customSiteTitle: 'Mjolnir API - file upload',
+  customfavIcon:
+    (process.env.BASE_HREF + '/' || '/') +
+    'favicon.ico?v=1',
+};
+
 const main = () => {
+  console.log(process.env.NODE_ENV, PORT);
   createMongo();
   const app = express();
   app.disable('x-powered-by');

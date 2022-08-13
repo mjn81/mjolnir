@@ -17,11 +17,8 @@ services:
 
   mongo:
     image: mongo:5.0.10
-    build:
-      tags:
-        - "mongo"
-    restart: always
     container_name: mongo_c
+    restart: always
     volumes:
       - ./mongodata:/data/db
 
@@ -37,6 +34,10 @@ services:
       - mongo
     ports:
       - "4000:4000"
+
+networks:
+  exp-api:
+    driver: bridge
 
 
   # dev:

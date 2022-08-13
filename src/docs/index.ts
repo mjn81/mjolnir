@@ -1,4 +1,3 @@
-import { PORT } from '../constants';
 import category from './category';
 import auth from './auth';
 import file from './file';
@@ -14,7 +13,7 @@ export default {
   },
   servers: [
     {
-      url: `http://localhost:${PORT}`,
+      url: `http://localhost:3000`,
       description: 'Local server',
     },
   ],

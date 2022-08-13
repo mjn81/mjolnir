@@ -36,19 +36,19 @@ services:
       - "4000:4000"
     environment:
       - NODE_ENV=production
-  dev:
-    build:
-      context: .
-      dockerfile: Dockerfile.dev
-      tags:
-        - "dev"
-    container_name: api_dev_c
-    depends_on:
-      - postgres
-    ports:
-      - "5000:5000"
-    environment:
-      - NODE_ENV=development
-    volumes:
-      - .:/app
-      - /app/node_modules
+  # dev:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile.dev
+  #     tags:
+  #       - "dev"
+  #   container_name: api_dev_c
+  #   depends_on:
+  #     - postgres
+  #   ports:
+  #     - "5000:5000"
+  #   environment:
+  #     - NODE_ENV=development
+  #   volumes:
+  #     - .:/app
+  #     - /app/node_modules

@@ -58,8 +58,7 @@ services:
         - "development"
     container_name: api_dev_c
     depends_on:
-      - postgres
-      - mongo
+      - postgres_dev
     ports:
       - "5000:5000"
     volumes:

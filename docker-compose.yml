@@ -13,7 +13,8 @@ services:
       - ./.db.env
     volumes:
       - ./pgdata:/var/lib/postgresql/data
-
+    networks:
+      - backend
 
   mongo:
     image: mongo:5.0.10
@@ -21,6 +22,8 @@ services:
     restart: always
     volumes:
       - ./mongodata:/data/db
+    networks:
+      - backend
 
   api:
     build:
@@ -34,9 +37,11 @@ services:
       - mongo
     ports:
       - "4000:4000"
+    networks:
+      - backend
 
 networks:
-  exp-api:
+  backend:
     driver: bridge
 
 

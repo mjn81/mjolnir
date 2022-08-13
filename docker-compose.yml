@@ -34,6 +34,8 @@ services:
       - mongo
     ports:
       - "4000:4000"
+    environment:
+      - NODE_ENV=production
   dev:
     build:
       context: .
@@ -45,6 +47,8 @@ services:
       - postgres
     ports:
       - "5000:5000"
+    environment:
+      - NODE_ENV=development
     volumes:
       - .:/app
       - /app/node_modules

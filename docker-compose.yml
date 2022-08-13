@@ -13,6 +13,8 @@ services:
       - ./.db.env
     volumes:
       - ./pgdata:/var/lib/postgresql/data
+
+
   mongo:
     image: mongo:5.0.10
     build:
@@ -22,6 +24,7 @@ services:
     container_name: mongo_c
     volumes:
       - ./mongodata:/data/db
+
   api:
     build:
       context: .
@@ -34,8 +37,8 @@ services:
       - mongo
     ports:
       - "4000:4000"
-    environment:
-      - NODE_ENV=production
+
+
   # dev:
   #   build:
   #     context: .

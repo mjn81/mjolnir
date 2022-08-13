@@ -46,7 +46,8 @@ export const SWAGGER_OPTS = {
 };
 
 const main = () => {
-  console.log(process.env.NODE_ENV, PORT);
+  console.log(process.env.MONGODB_URL);
+
   createMongo();
   const app = express();
   app.disable('x-powered-by');

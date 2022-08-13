@@ -33,7 +33,7 @@ services:
       - postgres
       - mongo
     ports:
-      - "4000:4000"
+      - "4000:3000"
     environment:
       - NODE_ENV=production
   dev:
@@ -46,7 +46,7 @@ services:
     depends_on:
       - postgres
     ports:
-      - "5000:5000"
+      - "5000:3000"
     environment:
       - NODE_ENV=development
     volumes:

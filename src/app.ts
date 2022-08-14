@@ -2,7 +2,7 @@ import express from 'express';
 import { config } from 'dotenv';
 import swaggerUi from 'swagger-ui-express';
 import 'express-async-errors';
-import helmet from 'helmet';
+// import helmet from 'helmet';
 
 import swaggerDoc from './docs';
 import {
@@ -13,7 +13,7 @@ import {
 } from './routers';
 import {
   errorHandler,
-  corsMiddleware,
+  // corsMiddleware,
   userAuthMiddleware,
   logMiddleware,
 } from './middlewares';

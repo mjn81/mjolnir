@@ -3,9 +3,9 @@ import { Request, Response } from 'express';
 
 import { CustomError } from '../errors';
 import {
-  PrismaClientInitializationError,
-  PrismaClientRustPanicError,
-  PrismaClientUnknownRequestError,
+  // PrismaClientInitializationError,
+  // PrismaClientRustPanicError,
+  // PrismaClientUnknownRequestError,
   PrismaClientValidationError,
 } from '@prisma/client/runtime';
 
@@ -30,22 +30,6 @@ export const errorHandler = (
           message: error.message,
         },
       });
-
-  if (
-    error instanceof
-      PrismaClientInitializationError ||
-    error instanceof PrismaClientRustPanicError ||
-    error instanceof
-      PrismaClientUnknownRequestError
-  ) {
-    return res
-      .status(ERROR_CODE['INTERNAL_SERVER_ERROR'])
-      .send({
-        errors: {
-          message: 'oops something went wrong!!',
-        },
-      });
-  }
   return res
     .status(ERROR_CODE['BAD_REQUEST'])
     .send({

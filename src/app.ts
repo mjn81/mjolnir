@@ -51,14 +51,14 @@ const main = () => {
   app.disable('x-powered-by');
 
   // middlewares
-  app.use(
-    helmet({
-      frameguard: true,
-      noSniff: true,
-    }),
-  );
+  // app.use(
+  //   helmet({
+  //     frameguard: true,
+  //     noSniff: true,
+  //   }),
+  // );
   app.use(logMiddleware());
-  app.use(corsMiddleware);
+  // app.use(corsMiddleware);
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
   app.use(userAuthMiddleware);

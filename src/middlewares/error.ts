@@ -50,7 +50,7 @@ export const errorHandler = (
     .status(ERROR_CODE['BAD_REQUEST'])
     .send({
       errors: {
-        message: error.message,
+        error,
       },
     });
 };

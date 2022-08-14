@@ -10,6 +10,7 @@ import {
   createToken,
   hashVerify,
   hash,
+  createDistToken,
 } from '../utils';
 import { prisma } from '../database';
 import {
@@ -115,7 +116,7 @@ class AuthController {
       prisma,
       req.user,
     );
-    const token = createToken({
+    const token = createDistToken({
       username: user.userName,
       id: user.id,
     });

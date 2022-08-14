@@ -14,6 +14,7 @@
     "format": "prettier --write '**/*.{ts,js,json,md}'",
     "migrate:dev": "dotenv -e .env.development -- yarn prisma migrate dev",
     "migrate:prod": "dotenv -e .env.production -- yarn prisma migrate deploy",
+    "studio:prod": "dotenv -e .connect.env -- yarn prisma studio",
     "lint": "eslint src/**/*.ts",
     "prepare": "husky install"
   },

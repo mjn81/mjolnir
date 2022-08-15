@@ -10,7 +10,7 @@
   "scripts": {
     "dev": "NODE_ENV=development nodemon src/app.ts",
     "build": "tsc",
-    "start": "NODE_ENV=production node dist/app.js",
+    "start": "node dist/app.js",
     "format": "prettier --write '**/*.{ts,js,json,md}'",
     "migrate:dev": "dotenv -e .env.development -- yarn prisma db push",
     "migrate:prod": "dotenv -e .env.production -- yarn prisma db push",

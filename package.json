@@ -2,7 +2,7 @@
   "name": "mjolnir",
   "version": "0.0.1",
   "description": "this is mjolnir file management api",
-  "main": "src/app.ts",
+  "main": "app.js",
   "private": true,
   "repository": "https://github.com/mjn81/mjolnir",
   "author": "mjn<mjjnn81@gmail.com>",
@@ -65,6 +65,7 @@
     "prisma": "^4.2.0",
     "ts-node": "^10.9.1",
     "ts-node-dev": "^2.0.0",
+    "tsc": "^2.0.4",
     "typescript": "^4.7.4"
   },
   "engines": {

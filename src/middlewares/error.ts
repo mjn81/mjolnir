@@ -42,7 +42,8 @@ export const errorHandler = (
       .status(ERROR_CODE['INTERNAL_SERVER_ERROR'])
       .send({
         errors: {
-          message: 'oops something went wrong!!',
+          message:
+            'oops something went wrong with database!!',
         },
       });
   }

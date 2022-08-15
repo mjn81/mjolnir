@@ -18,8 +18,7 @@
     "connect:prod": "pscale connect mjolnir main --port 44151",
     "connect:dev": "pscale connect mjolnir dev --port 44152",
     "lint": "eslint src/**/*.ts",
-    "prepare": "husky install",
-    "heroku-postbuild": "prisma generate"
+    "prepare": "husky install"
   },
   "dependencies": {
     "@prisma/client": "4.2.0",

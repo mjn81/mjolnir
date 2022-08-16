@@ -4,6 +4,7 @@ import { prisma } from '../database';
 import { roleBaseAuth } from '../helpers';
 import {
   ICatCreateSchema,
+  ICatDeleteSchema,
   ICatUpdateSchema,
 } from '../schemas';
 
@@ -83,6 +84,51 @@ class CategoryController {
     res.send({
       categories,
       count,
+    });
+  }
+
+  async detail(
+    req: ValidatedRequest<ICatDeleteSchema>,
+    res: Response,
+  ) {
+    await roleBaseAuth(prisma, req.user);
+    const { id } = req.params;
+
+    const category =
+      await prisma.categories.findUniqueOrThrow({
+        where: {
+          id,
+        },
+        include: {
+          _count: {
+            select: {
+              Files: true,
+            },
+          },
+        },
+      });
+    res.send({
+      category,
+    });
+  }
+
+  async delete(
+    req: ValidatedRequest<ICatDeleteSchema>,
+    res: Response,
+  ) {
+    await roleBaseAuth(prisma, req.user);
+    const { id } = req.params;
+
+    const category =
+      await prisma.categories.delete({
+        where: {
+          id,
+        },
+      });
+
+    res.send({
+      message: MESSAGES['CATEGORY_DELETED'],
+      category,
     });
   }
 }

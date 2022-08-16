@@ -30,3 +30,10 @@ export interface ICatUpdateSchema
     id: string;
   };
 }
+
+export interface ICatDeleteSchema
+  extends ValidatedRequestSchema {
+  [ContainerTypes.Params]: {
+    id: string;
+  };
+}

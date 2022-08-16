@@ -15,6 +15,7 @@
     "migrate:dev": "dotenv -e .env.development -- yarn prisma db push",
     "migrate:prod": "dotenv -e .env.production -- yarn prisma db push",
     "studio:prod": "dotenv -e .env.production -- yarn prisma studio",
+    "studio:dev": "dotenv -e .env.development -- yarn prisma studio",
     "connect:prod": "pscale connect mjolnir main --port 44151",
     "connect:dev": "pscale connect mjolnir dev --port 44152",
     "generate": "prisma generate",

@@ -38,3 +38,22 @@ export class AuthorizationError extends CustomError {
     ];
   }
 }
+
+export class InvalidRoleError extends CustomError {
+  errorCode = ERROR_CODE['INVALID_ROLE_ERROR'];
+  errorType = 'AuthorizationError';
+  constructor(message: string) {
+    super(message);
+    Object.setPrototypeOf(
+      this,
+      TokenError.prototype,
+    );
+  }
+  serializeErrors() {
+    return [
+      {
+        message: this.message,
+      },
+    ];
+  }
+}

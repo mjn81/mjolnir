@@ -10,6 +10,7 @@ import {
   authRouter,
   playgroundRouter,
   categoryRouter,
+  userRouter,
 } from './routers';
 import {
   errorHandler,
@@ -72,6 +73,7 @@ const main = () => {
   app.use('/playground', playgroundRouter);
   app.use('/auth', authRouter);
   app.use('/category', categoryRouter);
+  app.use('/user', userRouter);
   // error Handler
   app.use(errorHandler);
 

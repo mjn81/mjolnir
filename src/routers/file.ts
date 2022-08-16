@@ -28,6 +28,12 @@ router.get(
   fileController.serve,
 );
 
+router.get(
+  '/details/:id',
+  paramsValidator(fileServeSchema),
+  fileController.details,
+);
+
 router.delete(
   '/:id',
   paramsValidator(fileServeSchema),

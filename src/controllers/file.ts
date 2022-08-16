@@ -195,6 +195,22 @@ class FileController {
     });
   }
 
+  async details(
+    req: ValidatedRequest<IFileServeSchema>,
+    res: Response,
+  ) {
+    await roleBaseAuth(prisma, req.user);
+    const { id } = req.params;
+    const file =
+      await prisma.files.findUniqueOrThrow({
+        where: {
+          id,
+        },
+      });
+
+    return res.send({ file });
+  }
+
   async update(
     req: ValidatedRequest<IFileUpdateSchema>,
     res: Response,

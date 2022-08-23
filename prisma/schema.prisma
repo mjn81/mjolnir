@@ -21,6 +21,8 @@ model Files {
   user         Users       @relation(fields: [usersId], references: [id], onDelete: Cascade)
   categoriesId String?
   usersId      String
+  folder       Folders?     @relation(fields: [foldersId], references: [id])
+  foldersId    String
 }
 
 model Categories {
@@ -44,6 +46,20 @@ model Users {
   updatedAt  DateTime     @updatedAt
   Files      Files[]
   Categories Categories[]
+  Folders    Folders[]
+}
+
+model Folders {
+  id        String    @id @unique @default(cuid())
+  name      String?
+  parent    Folders?  @relation("parents", fields: [parentId], references: [id])
+  Folders   Folders[] @relation("parents")
+  parentId  String?
+  user      Users     @relation(fields: [usersId], references: [id])
+  usersId   String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  Files     Files[]
 }
 
 enum Role {

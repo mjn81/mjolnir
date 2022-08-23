@@ -79,6 +79,9 @@ class CategoryController {
         include: {
           _count: true,
         },
+        orderBy: {
+          updatedAt: 'desc',
+        },
       });
 
     res.send({

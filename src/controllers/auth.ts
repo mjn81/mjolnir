@@ -58,6 +58,7 @@ class AuthController {
         id: user.id,
         userName: user.userName,
         email: user.email,
+        role: user.role,
       },
     });
   }
@@ -107,6 +108,7 @@ class AuthController {
         id: newUser.id,
         userName: newUser.userName,
         email: newUser.email,
+        role: newUser.role,
       },
     });
   }
@@ -129,6 +131,18 @@ class AuthController {
         id: user.id,
         userName: user.userName,
         email: user.email,
+      },
+    });
+  }
+
+  async profile(req: Request, res: Response) {
+    const user = await roleBaseAuth(
+      prisma,
+      req.user,
+    );
+    res.send({
+      user: {
+        ...user,
       },
     });
   }

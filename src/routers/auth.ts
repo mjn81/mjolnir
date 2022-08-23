@@ -26,4 +26,6 @@ router.get(
   authController.distToken,
 );
 
+router.get('/me', authController.profile);
+
 export const authRouter = router;

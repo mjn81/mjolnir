@@ -70,17 +70,19 @@ class FolderController {
 
   private trimLevel = (
     folders: any[],
-    startIndex: number,
     level: number,
   ) => {
     const lvlArray: any[] = [];
-    let i = startIndex;
-    while (i < folders.length && folders[i].lvl === level) {
-      lvlArray.push(folders[i]);
-      i++;
+    let i = folders.length - 1;
+    while (i > 0 || folders[i].lvl === level) {
+      if (folders[i].lvl === level) {
+        lvlArray.push(folders[i]);
+      }
+      i--;
     }
-    return { array: lvlArray, index: i + 1 };
+    return { array: lvlArray, index: i - 1 };
   };
+
 
   /// phase 3 : refactor
   private creatTree = (folders: any[]) => {
@@ -89,12 +91,25 @@ class FolderController {
       ...folders[0],
     };
     if (maxLevel < 2) return res;
-    const { array, index } = this.trimLevel(folders, 1, 2);
+    const { array } = this.trimLevel(folders, 2);
     res.children = [...array];
-    for (let i = 3; i < maxLevel; i++) {
-      const { array: a1, index: i1 } = this.trimLevel(folders, index, i);
-      for (let j = 0; j < a1.length; j++) {}
+    if (maxLevel < 3) return res;
+    let chl: any[] = [];
+    for (let i = maxLevel; i > 2; i--) {
+      const { array: a1 } = this.trimLevel(folders, i - 1);
+      for (let j = a1.length -1; j > -1; j--) {
+        const { array: a2 } = this.trimLevel(folders, i);
+        a1[j].children = a2.filter((folder) => folder.parentId == a1[j].id);
+      }
+      chl = chl.length === 0 ? a1 : a1.map((level2) => {
+        const children = level2.children?.map((level3) => {
+          return chl.filter((level34) => level34.id == level3.id)[0];
+        });
+        level2.children = children;
+        return level2;
+      });
     }
+    res.children = chl;
     return res;
   };
 

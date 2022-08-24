@@ -165,7 +165,7 @@ class FolderController {
 
     return res.send({
       ...rootFolder,
-      children : subFolders,
+      children: subFolders,
     });
   };
 }

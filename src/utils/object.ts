@@ -3,9 +3,9 @@ export const dynamicAccessor = (obj: object, propString: string) => {
 
   let prop,
     props = propString.split('.');
-  
-  let i = 0
-  
+
+  let i = 0;
+
   for (let iLen = props.length - 1; i < iLen; i++) {
     prop = props[i];
 

@@ -7,8 +7,7 @@ export default {
   openapi: '3.0.3',
   info: {
     title: 'Mjolnir API',
-    description:
-      'This is Mjolnir file api swagger documentation',
+    description: 'This is Mjolnir file api swagger documentation',
     version: '0.0.1',
   },
   servers: [

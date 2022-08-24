@@ -23,6 +23,7 @@ model Files {
   usersId      String
   folder       Folders?     @relation(fields: [foldersId], references: [id])
   foldersId    String
+  @@map("file")
 }
 
 model Categories {
@@ -33,6 +34,7 @@ model Categories {
   updatedAt DateTime @updatedAt
   Files     Files[]
   usersId   String
+  @@map("category")
 }
 
 model Users {
@@ -47,19 +49,21 @@ model Users {
   Files      Files[]
   Categories Categories[]
   Folders    Folders[]
+  @@map("user")
 }
 
 model Folders {
   id        String    @id @unique @default(cuid())
   name      String?
+  parentId  String?
   parent    Folders?  @relation("parents", fields: [parentId], references: [id])
   Folders   Folders[] @relation("parents")
-  parentId  String?
   user      Users     @relation(fields: [usersId], references: [id])
   usersId   String
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   Files     Files[]
+  @@map("folder")
 }
 
 enum Role {

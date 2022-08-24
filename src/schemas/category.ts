@@ -7,8 +7,7 @@ import {
 export const catCreateSchema = Joi.object({
   name: Joi.string().required(),
 }).required();
-export interface ICatCreateSchema
-  extends ValidatedRequestSchema {
+export interface ICatCreateSchema extends ValidatedRequestSchema {
   [ContainerTypes.Body]: {
     name: string;
   };
@@ -21,8 +20,7 @@ export const catUpdateParam = Joi.object({
   id: Joi.string().required(),
 }).required();
 
-export interface ICatUpdateSchema
-  extends ValidatedRequestSchema {
+export interface ICatUpdateSchema extends ValidatedRequestSchema {
   [ContainerTypes.Body]: {
     name: string;
   };
@@ -31,8 +29,7 @@ export interface ICatUpdateSchema
   };
 }
 
-export interface ICatDeleteSchema
-  extends ValidatedRequestSchema {
+export interface ICatDeleteSchema extends ValidatedRequestSchema {
   [ContainerTypes.Params]: {
     id: string;
   };

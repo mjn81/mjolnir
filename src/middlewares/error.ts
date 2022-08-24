@@ -20,38 +20,27 @@ export const errorHandler = (
       errors: error.serializeErrors(),
     });
   }
-  if (
-    error instanceof PrismaClientValidationError
-  )
-    return res
-      .status(ERROR_CODE['BAD_REQUEST'])
-      .send({
-        errors: {
-          message: error.message,
-        },
-      });
-
-  if (
-    error instanceof
-      PrismaClientInitializationError ||
-    error instanceof PrismaClientRustPanicError ||
-    error instanceof
-      PrismaClientUnknownRequestError
-  ) {
-    return res
-      .status(ERROR_CODE['INTERNAL_SERVER_ERROR'])
-      .send({
-        errors: {
-          message:
-            'oops something went wrong with database!!',
-        },
-      });
-  }
-  return res
-    .status(ERROR_CODE['BAD_REQUEST'])
-    .send({
+  if (error instanceof PrismaClientValidationError)
+    return res.status(ERROR_CODE['BAD_REQUEST']).send({
       errors: {
-        error,
+        message: error.message,
       },
     });
+
+  if (
+    error instanceof PrismaClientInitializationError ||
+    error instanceof PrismaClientRustPanicError ||
+    error instanceof PrismaClientUnknownRequestError
+  ) {
+    return res.status(ERROR_CODE['INTERNAL_SERVER_ERROR']).send({
+      errors: {
+        message: 'oops something went wrong with database!!',
+      },
+    });
+  }
+  return res.status(ERROR_CODE['BAD_REQUEST']).send({
+    errors: {
+      error,
+    },
+  });
 };

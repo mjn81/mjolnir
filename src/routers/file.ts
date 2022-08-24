@@ -1,9 +1,5 @@
 import { Router } from 'express';
-import {
-  bodyValidator,
-  paramsValidator,
-  upload,
-} from '../middlewares';
+import { bodyValidator, paramsValidator, upload } from '../middlewares';
 
 import { fileController } from '../controllers';
 import {
@@ -16,17 +12,9 @@ const router = Router();
 
 router.get('/', fileController.list);
 
-router.post(
-  '/',
-  upload.single('file'),
-  fileController.upload,
-);
+router.post('/', upload.single('file'), fileController.upload);
 
-router.get(
-  '/:id',
-  paramsValidator(fileServeSchema),
-  fileController.serve,
-);
+router.get('/:id', paramsValidator(fileServeSchema), fileController.serve);
 
 router.get(
   '/details/:id',

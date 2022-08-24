@@ -1,13 +1,7 @@
 import { Router } from 'express';
 import { userController } from '../controllers';
-import {
-  bodyValidator,
-  paramsValidator,
-} from '../middlewares';
-import {
-  userDeleteSchema,
-  userUpdateSchema,
-} from '../schemas';
+import { bodyValidator, paramsValidator } from '../middlewares';
+import { userDeleteSchema, userUpdateSchema } from '../schemas';
 
 const router = Router();
 

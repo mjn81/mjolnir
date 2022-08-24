@@ -6,10 +6,7 @@ export class ServerError extends CustomError {
   errorType = 'SERVER_ERROR';
   constructor(messgae: string) {
     super(messgae);
-    Object.setPrototypeOf(
-      this,
-      ServerError.prototype,
-    );
+    Object.setPrototypeOf(this, ServerError.prototype);
   }
 
   serializeErrors() {

@@ -5,15 +5,9 @@ export class ValidationError extends CustomError {
   errorCode = ERROR_CODE['BAD_REQUEST'];
   errorType = 'VALIDATION_ERROR';
 
-  constructor(
-    message: string,
-    private property: string,
-  ) {
+  constructor(message: string, private property: string) {
     super(message);
-    Object.setPrototypeOf(
-      this,
-      ValidationError.prototype,
-    );
+    Object.setPrototypeOf(this, ValidationError.prototype);
   }
 
   serializeErrors() {
@@ -32,10 +26,7 @@ export class SingleValidationError extends CustomError {
 
   constructor(message: string) {
     super(message);
-    Object.setPrototypeOf(
-      this,
-      ValidationError.prototype,
-    );
+    Object.setPrototypeOf(this, ValidationError.prototype);
   }
 
   serializeErrors() {

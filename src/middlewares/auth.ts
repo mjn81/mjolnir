@@ -1,8 +1,4 @@
-import {
-  NextFunction,
-  Request,
-  Response,
-} from 'express';
+import { NextFunction, Request, Response } from 'express';
 
 import { TokenError } from '../errors';
 import { MESSAGES } from '../constants';
@@ -19,9 +15,7 @@ export const userAuthMiddleware = async (
   const bearer = token?.split(' ') as string[];
 
   if (!bearer[1] || bearer[0] !== 'Token')
-    throw new TokenError(
-      MESSAGES['WRONG_BEARER'],
-    );
+    throw new TokenError(MESSAGES['WRONG_BEARER']);
 
   const payload = verifyToken(bearer[1]);
   if (!payload) return next();

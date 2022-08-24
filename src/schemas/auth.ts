@@ -16,16 +16,14 @@ export const registerSchema = Joi.object({
   password: Joi.string().min(5).max(9).required(),
 }).required();
 
-export interface ILoginSchema
-  extends ValidatedRequestSchema {
+export interface ILoginSchema extends ValidatedRequestSchema {
   [ContainerTypes.Body]: {
     email: string;
     password: string;
   };
 }
 
-export interface IRegisterSchema
-  extends ValidatedRequestSchema {
+export interface IRegisterSchema extends ValidatedRequestSchema {
   [ContainerTypes.Body]: {
     userName: string;
     fullName: string;

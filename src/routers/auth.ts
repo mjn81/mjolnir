@@ -2,18 +2,11 @@ import { Router } from 'express';
 
 import { authController } from '../controllers';
 import { bodyValidator } from '../middlewares';
-import {
-  loginSchema,
-  registerSchema,
-} from '../schemas';
+import { loginSchema, registerSchema } from '../schemas';
 
 const router = Router();
 
-router.post(
-  '/login',
-  bodyValidator(loginSchema),
-  authController.login,
-);
+router.post('/login', bodyValidator(loginSchema), authController.login);
 
 router.post(
   '/register',
@@ -21,10 +14,7 @@ router.post(
   authController.register,
 );
 
-router.get(
-  '/distToken',
-  authController.distToken,
-);
+router.get('/distToken', authController.distToken);
 
 router.get('/me', authController.profile);
 

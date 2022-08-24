@@ -8,8 +8,7 @@ export const fileServeSchema = Joi.object({
   id: Joi.string().required(),
 });
 
-export interface IFileServeSchema
-  extends ValidatedRequestSchema {
+export interface IFileServeSchema extends ValidatedRequestSchema {
   [ContainerTypes.Params]: {
     id: string;
   };
@@ -19,8 +18,7 @@ export const fileListSchema = Joi.object({
   category: Joi.string().required(),
 });
 
-export interface IFileListSchema
-  extends ValidatedRequestSchema {
+export interface IFileListSchema extends ValidatedRequestSchema {
   [ContainerTypes.Query]: {
     category: string;
   };
@@ -35,8 +33,7 @@ export const fileUpdateBody = Joi.object({
   category: Joi.string().required(),
 });
 
-export interface IFileUpdateSchema
-  extends ValidatedRequestSchema {
+export interface IFileUpdateSchema extends ValidatedRequestSchema {
   [ContainerTypes.Body]: {
     name: string;
     category: string;

@@ -6,10 +6,7 @@ export class TokenError extends CustomError {
   errorType = 'TokenError';
   constructor(message: string) {
     super(message);
-    Object.setPrototypeOf(
-      this,
-      TokenError.prototype,
-    );
+    Object.setPrototypeOf(this, TokenError.prototype);
   }
   serializeErrors() {
     return [
@@ -25,10 +22,7 @@ export class AuthorizationError extends CustomError {
   errorType = 'AuthorizationError';
   constructor(message: string) {
     super(message);
-    Object.setPrototypeOf(
-      this,
-      TokenError.prototype,
-    );
+    Object.setPrototypeOf(this, TokenError.prototype);
   }
   serializeErrors() {
     return [
@@ -44,10 +38,7 @@ export class InvalidRoleError extends CustomError {
   errorType = 'AuthorizationError';
   constructor(message: string) {
     super(message);
-    Object.setPrototypeOf(
-      this,
-      TokenError.prototype,
-    );
+    Object.setPrototypeOf(this, TokenError.prototype);
   }
   serializeErrors() {
     return [

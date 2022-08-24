@@ -1,2 +1,1 @@
-export const concat = (array: any[]) =>
-  array.join(', ');
+export const concat = (array: any[]) => array.join(', ');

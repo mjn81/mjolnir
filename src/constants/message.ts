@@ -8,10 +8,8 @@ export const MESSAGES = {
   REGISTER_SUCCESS: 'Registered successfully!!',
   WRONG_BEARER: 'Wrong bearer token.',
   UNAUTHORIZED: 'Unauthorized!!',
-  INSUFFICIENT_PERMISSION:
-    'Insufficient permission!!',
-  DISTRIBUTOR_TOKEN_SUCCESS:
-    'Token successfully generated!!',
+  INSUFFICIENT_PERMISSION: 'Insufficient permission!!',
+  DISTRIBUTOR_TOKEN_SUCCESS: 'Token successfully generated!!',
 
   CATEGORY_CREATED: 'Category created!!',
   CATEGORY_DELETED: 'Category deleted!!',

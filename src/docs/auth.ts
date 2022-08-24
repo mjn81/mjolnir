@@ -37,8 +37,7 @@ export default {
             description: 'Success',
             content: {
               'application/json': {
-                message:
-                  'Registered successfully!!',
+                message: 'Registered successfully!!',
                 token:
                   'Token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXIxIiwiaWQiOiJjbDZxdGF4bm0wMDAybmdveG9jMWFlbHY0IiwiaWF0IjoxNjYwMzI5NDc5LCJleHAiOjE2NjA0MTU4Nzl9.qXezdF2_Fyvl-uB1sLIZ5Atpbo2zSLDo6BhvkmdRAI8',
                 user: {
@@ -64,8 +63,7 @@ export default {
             description: 'Success',
             content: {
               'application/json': {
-                message:
-                  'Dist Token successful!!',
+                message: 'Dist Token successful!!',
                 token:
                   'Token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1qbmFkbWluIiwiaWQiOiJjbDZwMzA2NGQwMDExYTJveGRxbm5icjAxIiwiaWF0IjoxNjYwMzI5NDIzLCJleHAiOjE2NjA0MTU4MjN9.wUW33VuQBrqHiuSz5SmjdtMe7gSWd0mFFc9W-zUhoJc',
                 user: {

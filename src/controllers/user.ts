@@ -2,10 +2,7 @@ import { Role } from '@prisma/client';
 import { Request, Response } from 'express';
 import { ValidatedRequest } from 'express-joi-validation';
 import { MESSAGES } from '../constants';
-import {
-  InvalidRoleError,
-  SingleValidationError,
-} from '../errors';
+import { InvalidRoleError, SingleValidationError } from '../errors';
 import { prisma } from '../database';
 import { roleBaseAuth } from '../helpers';
 import {
@@ -16,36 +13,20 @@ import {
 import { hash, checkHash } from '../utils';
 
 class UserController {
-  async create(
-    req: ValidatedRequest<IUserCreateSchema>,
-    res: Response,
-  ) {
-    await roleBaseAuth(prisma, req.user, [
-      Role.ADMIN,
-    ]);
-    const {
-      userName,
-      fullName,
-      email,
-      password,
-      role,
-    } = req.body;
+  async create(req: ValidatedRequest<IUserCreateSchema>, res: Response) {
+    await roleBaseAuth(prisma, req.user, [Role.ADMIN]);
+    const { userName, fullName, email, password, role } = req.body;
     if (!Role[role]) {
-      throw new InvalidRoleError(
-        MESSAGES['INVALID_ROLE_ERROR'],
-      );
+      throw new InvalidRoleError(MESSAGES['INVALID_ROLE_ERROR']);
     }
-    const checkUser =
-      await prisma.users.findUnique({
-        where: {
-          email,
-        },
-      });
+    const checkUser = await prisma.users.findUnique({
+      where: {
+        email,
+      },
+    });
 
     if (checkUser)
-      throw new SingleValidationError(
-        MESSAGES['USER_EXISTS'],
-      );
+      throw new SingleValidationError(MESSAGES['USER_EXISTS']);
 
     const hashedPassword = await hash(password);
     const user = await prisma.users.create({
@@ -65,9 +46,7 @@ class UserController {
   }
 
   async list(req: Request, res: Response) {
-    await roleBaseAuth(prisma, req.user, [
-      Role.ADMIN,
-    ]);
+    await roleBaseAuth(prisma, req.user, [Role.ADMIN]);
 
     // phase 3 add pagination
     const count = await prisma.users.count();
@@ -78,13 +57,8 @@ class UserController {
     });
   }
 
-  async delete(
-    req: ValidatedRequest<IUserDeleteSchema>,
-    res: Response,
-  ) {
-    await roleBaseAuth(prisma, req.user, [
-      Role.ADMIN,
-    ]);
+  async delete(req: ValidatedRequest<IUserDeleteSchema>, res: Response) {
+    await roleBaseAuth(prisma, req.user, [Role.ADMIN]);
     const { id } = req.params;
     const user = await prisma.users.delete({
       where: {
@@ -98,13 +72,8 @@ class UserController {
     });
   }
 
-  async detail(
-    req: ValidatedRequest<IUserDeleteSchema>,
-    res: Response,
-  ) {
-    await roleBaseAuth(prisma, req.user, [
-      Role.ADMIN,
-    ]);
+  async detail(req: ValidatedRequest<IUserDeleteSchema>, res: Response) {
+    await roleBaseAuth(prisma, req.user, [Role.ADMIN]);
     const { id } = req.params;
     const user = await prisma.users.findUnique({
       where: {
@@ -117,26 +86,13 @@ class UserController {
     });
   }
 
-  async update(
-    req: ValidatedRequest<IUserUpdateSchema>,
-    res: Response,
-  ) {
-    await roleBaseAuth(prisma, req.user, [
-      Role.ADMIN,
-    ]);
+  async update(req: ValidatedRequest<IUserUpdateSchema>, res: Response) {
+    await roleBaseAuth(prisma, req.user, [Role.ADMIN]);
     const { id } = req.params;
-    const {
-      userName,
-      fullName,
-      email,
-      password,
-      role,
-    } = req.body;
+    const { userName, fullName, email, password, role } = req.body;
 
     if (!Role[role]) {
-      throw new InvalidRoleError(
-        MESSAGES['INVALID_ROLE_ERROR'],
-      );
+      throw new InvalidRoleError(MESSAGES['INVALID_ROLE_ERROR']);
     }
 
     let hashedPassword = password;
@@ -165,5 +121,4 @@ class UserController {
   }
 }
 
-export const userController =
-  new UserController();
+export const userController = new UserController();

@@ -12,8 +12,7 @@ export const userCreateSchema = Joi.object({
   role: Joi.string().case('upper').required(),
 }).required();
 
-export interface IUserCreateSchema
-  extends ValidatedRequestSchema {
+export interface IUserCreateSchema extends ValidatedRequestSchema {
   [ContainerTypes.Body]: {
     userName: string;
     fullName: string;
@@ -27,8 +26,7 @@ export const userDeleteSchema = Joi.object({
   id: Joi.string().required(),
 }).required();
 
-export interface IUserDeleteSchema
-  extends ValidatedRequestSchema {
+export interface IUserDeleteSchema extends ValidatedRequestSchema {
   [ContainerTypes.Params]: {
     id: string;
   };
@@ -42,8 +40,7 @@ export const userUpdateSchema = Joi.object({
   role: Joi.string().case('upper').required(),
 }).required();
 
-export interface IUserUpdateSchema
-  extends ValidatedRequestSchema {
+export interface IUserUpdateSchema extends ValidatedRequestSchema {
   [ContainerTypes.Params]: {
     id: string;
   };

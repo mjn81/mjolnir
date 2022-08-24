@@ -17,12 +17,9 @@ export default {
                     {
                       id: 'cl6p33pfv0048a2oxzfw7jwmt',
                       name: 'cat 1',
-                      createdAt:
-                        '2022-08-11T13:36:46.219Z',
-                      updatedAt:
-                        '2022-08-11T13:36:46.219Z',
-                      usersId:
-                        'cl6p3064d0011a2oxdqnnbr01',
+                      createdAt: '2022-08-11T13:36:46.219Z',
+                      updatedAt: '2022-08-11T13:36:46.219Z',
+                      usersId: 'cl6p3064d0011a2oxdqnnbr01',
                       _count: {
                         Files: 2,
                       },
@@ -65,12 +62,9 @@ export default {
                   category: {
                     id: 'cl6qt3ooa0003orox4wupqrwe',
                     name: 'cat test q',
-                    createdAt:
-                      '2022-08-12T18:32:21.418Z',
-                    updatedAt:
-                      '2022-08-12T18:32:21.419Z',
-                    usersId:
-                      'cl6p3064d0011a2oxdqnnbr01',
+                    createdAt: '2022-08-12T18:32:21.418Z',
+                    updatedAt: '2022-08-12T18:32:21.419Z',
+                    usersId: 'cl6p3064d0011a2oxdqnnbr01',
                   },
                 },
               },
@@ -123,12 +117,9 @@ export default {
                   category: {
                     id: 'cl6p33pfv0048a2oxzfw7jwmt',
                     name: 'category test',
-                    createdAt:
-                      '2022-08-11T13:36:46.219Z',
-                    updatedAt:
-                      '2022-08-12T18:30:24.253Z',
-                    usersId:
-                      'cl6p3064d0011a2oxdqnnbr01',
+                    createdAt: '2022-08-11T13:36:46.219Z',
+                    updatedAt: '2022-08-12T18:30:24.253Z',
+                    usersId: 'cl6p3064d0011a2oxdqnnbr01',
                   },
                 },
               },

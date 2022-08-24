@@ -6,10 +6,7 @@ export class FileUploadError extends CustomError {
   errorType = 'FILE_UPLOAD_ERROR';
   constructor(messgae: string) {
     super(messgae);
-    Object.setPrototypeOf(
-      this,
-      FileUploadError.prototype,
-    );
+    Object.setPrototypeOf(this, FileUploadError.prototype);
   }
 
   serializeErrors() {

@@ -65,8 +65,7 @@ export default {
                   category: {
                     type: 'string',
                     format: 'uuid',
-                    example:
-                      'cl6p33pfv0048a2oxzfw7jwmt',
+                    example: 'cl6p33pfv0048a2oxzfw7jwmt',
                   },
                   file: {
                     type: 'string',

@@ -3,11 +3,13 @@ export const dynamicAccessor = (obj: object, propString: string) => {
 
   let prop,
     props = propString.split('.');
-
-  for (var i = 0, iLen = props.length - 1; i < iLen; i++) {
+  
+  let i = 0
+  
+  for (let iLen = props.length - 1; i < iLen; i++) {
     prop = props[i];
 
-    var candidate = obj[prop];
+    let candidate = obj[prop];
     if (candidate !== undefined) {
       obj = candidate;
     } else {

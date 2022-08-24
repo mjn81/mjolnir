@@ -16,7 +16,7 @@ router.post(
 router.get(
   '/:id',
   paramsValidator(folderDetailSchema),
-  folderController.folderTree,
+  folderController.subFolder,
 );
 
 export const folderRouter = router;

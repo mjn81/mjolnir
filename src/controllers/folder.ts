@@ -32,7 +32,10 @@ class FolderController {
     res.send({ folders, count });
   }
 
-  async create(req: ValidatedRequest<IFolderCreateSchema>, res: Response) {
+  create = async (
+    req: ValidatedRequest<IFolderCreateSchema>,
+    res: Response,
+  ) => {
     const user = await roleBaseAuth(prisma, req.user);
     // phase 3 : refactor
 
@@ -66,7 +69,7 @@ class FolderController {
 
     const folder = await prisma.folders.create(query);
     res.send(folder);
-  }
+  };
 
   private trimLevel = (folders: any[], level: number) => {
     const lvlArray: any[] = [];
@@ -134,6 +137,36 @@ class FolderController {
     const tree = this.creatTree(folders);
 
     res.send({ folders: tree });
+  };
+
+  subFolder = async (
+    req: ValidatedRequest<IFolderDetailSchema>,
+    res: Response,
+  ) => {
+    const user = await roleBaseAuth(prisma, req.user);
+    const { id } = req.params;
+    const rootFolder = await prisma.folders.findUniqueOrThrow({
+      where: {
+        id: id,
+      },
+    });
+    const subFolders = await prisma.folders.findMany({
+      where: {
+        AND: {
+          parent: {
+            id: id,
+          },
+          user: {
+            id: user.id,
+          },
+        },
+      },
+    });
+
+    return res.send({
+      ...rootFolder,
+      children : subFolders,
+    });
   };
 }
 

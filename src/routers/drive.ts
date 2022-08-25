@@ -1,9 +1,8 @@
 import { Router } from 'express';
-import { driveController } from '../controllers'
+import { driveController } from '../controllers';
 
 const router = Router();
 
-router.get('/' , driveController.rootDrive);
-
+router.get('/', driveController.rootDrive);
 
 export const driveRouter = router;

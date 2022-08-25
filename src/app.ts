@@ -12,6 +12,7 @@ import {
   categoryRouter,
   userRouter,
   folderRouter,
+  driveRouter
 } from './routers';
 import {
   errorHandler,
@@ -74,6 +75,7 @@ const main = () => {
   app.use('/category', categoryRouter);
   app.use('/user', userRouter);
   app.use('/folder', folderRouter);
+  app.use('/drive', driveRouter)
   // error Handler
   app.use(errorHandler);
 

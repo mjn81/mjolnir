@@ -6,13 +6,13 @@ import Joi from 'joi';
 
 export const folderCreateSchema = Joi.object({
   name: Joi.string().required(),
-  parent: Joi.string().optional(),
+  parent: Joi.string().optional().allow(null),
 });
 
 export interface IFolderCreateSchema extends ValidatedRequestSchema {
   [ContainerTypes.Body]: {
     name: string;
-    parent?: string;
+    parent: string | null;
   };
 }
 

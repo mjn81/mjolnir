@@ -27,13 +27,32 @@ class DriveController {
         },
       },
     });
+    const folders = rootFolders.map((folder) => {
+      return {
+        ...folder,
+        type: 'folder',
+      };
+    });
+    const files = rootFiles.map((file) => {
+      return {
+        ...file,
+        type: 'file',
+      };
+    });
+
+    const response = [...folders, ...files].sort((a, b) => {
+      if (!a.name || !b.name) return 0;
+      if (a.name < b.name) {
+        return -1;
+      }
+      if (a.name > b.name) {
+        return 1;
+      }
+      return 0;
+    });
+
     res.send({
-      folders: {
-        ...rootFolders,
-      },
-      files: {
-        ...rootFiles,
-      },
+      data: response,
     });
   };
 
@@ -43,7 +62,11 @@ class DriveController {
   ) => {
     const user = await roleBaseAuth(prisma, req.user);
     const { id } = req.params;
-
+    const folder = await prisma.folders.findUniqueOrThrow({
+      where: {
+        id: id,
+      },
+    });
     const subFolders = await prisma.folders.findMany({
       where: {
         AND: {
@@ -70,9 +93,33 @@ class DriveController {
       },
     });
 
+    const folders = subFolders.map((folder) => {
+      return {
+        ...folder,
+        type: 'folder',
+      };
+    });
+    const files = subFiles.map((file) => {
+      return {
+        ...file,
+        type: 'file',
+      };
+    });
+
+    const response = [...folders, ...files].sort((a, b) => {
+      if (!a.name || !b.name) return 0;
+      if (a.name < b.name) {
+        return -1;
+      }
+      if (a.name > b.name) {
+        return 1;
+      }
+      return 0;
+    });
+
     res.send({
-      folders: subFolders,
-      files: subFiles,
+      ...folder,
+      data: response,
     });
   };
 }

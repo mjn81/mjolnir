@@ -16,13 +16,13 @@ model Files {
   path         String
   mimeType     String
   category     Categories? @relation(fields: [categoriesId], references: [id])
+  categoriesId String?
   createdAt    DateTime    @default(now())
   updatedAt    DateTime    @updatedAt
   user         Users       @relation(fields: [usersId], references: [id], onDelete: Cascade)
-  categoriesId String?
   usersId      String
   folder       Folders?     @relation(fields: [foldersId], references: [id])
-  foldersId    String
+  foldersId    String?
   @@map("file")
 }
 

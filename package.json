@@ -11,7 +11,7 @@
     "dev": "NODE_ENV=development nodemon src/app.ts",
     "debug": "NODE_ENV=development nodemon --inspect src/app.ts",
     "build": "tsc",
-    "start": "node dist/app.js",
+    "start": "NODE_ENV=production node dist/app.js",
     "format": "prettier --write '**/*.{ts,js,json,md}'",
     "migrate:dev": "dotenv -e .env.development -- yarn prisma migrate dev",
     "migrate:prod": "dotenv -e .env.production -- yarn prisma migrate prod",

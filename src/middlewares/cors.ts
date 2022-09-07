@@ -1,9 +1,8 @@
 import cors from 'cors';
-import { WHITE_LIST } from 'constants/index';
-
+import { WHITE_LIST } from '../constants';
 
 export const corsMiddleware = cors({
-  origin: (origin, callback) => { 
+  origin: (origin, callback) => {
     if (WHITE_LIST.indexOf(origin ?? '') !== -1) {
       callback(null, true);
     } else {

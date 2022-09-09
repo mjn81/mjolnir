@@ -71,21 +71,14 @@ class FileController {
       data: fileData,
     });
   }
-
+  /// adding diffrent modes 1 - public (for distrobuters) 2 - private
   async serve(req: ValidatedRequest<IFileServeSchema>, res: Response) {
-    const user = await roleBaseAuth(prisma, req.user);
-
     const { id } = req.params;
     const file = await prisma.files.findFirstOrThrow({
       where: {
         AND: [
           {
             id,
-          },
-          {
-            user: {
-              id: user.id,
-            },
           },
         ],
       },

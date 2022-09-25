@@ -21,8 +21,8 @@ jobs:
     
     steps: 
       - name: deploy to my vps
-        uses: appleboy/ssh-action@v0.1.3
-        with:
+      - uses: appleboy/ssh-action@v0.1.3
+      - with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}

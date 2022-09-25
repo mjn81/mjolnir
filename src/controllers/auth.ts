@@ -8,7 +8,6 @@ import { prisma } from '../database';
 import { ILoginSchema, IRegisterSchema } from '../schemas';
 import { roleBaseAuth } from '../helpers';
 
-// phase 2 : add refresh token
 
 class AuthController {
   async login(req: ValidatedRequest<ILoginSchema>, res: Response) {

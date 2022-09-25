@@ -21,8 +21,9 @@ model Files {
   updatedAt    DateTime    @updatedAt
   user         Users       @relation(fields: [usersId], references: [id], onDelete: Cascade)
   usersId      String
-  folder       Folders?     @relation(fields: [foldersId], references: [id])
+  folder       Folders?    @relation(fields: [foldersId], references: [id])
   foldersId    String?
+
   @@map("file")
 }
 
@@ -34,6 +35,7 @@ model Categories {
   updatedAt DateTime @updatedAt
   Files     Files[]
   usersId   String
+
   @@map("category")
 }
 
@@ -43,12 +45,15 @@ model Users {
   userName   String
   email      String       @unique
   password   String
-  role       Role         @default(CLIENT)
+  role       Role         @relation(fields: [roleId], references: [id])
+  roleId     String
+  used       Usage?
   createdAt  DateTime     @default(now())
   updatedAt  DateTime     @updatedAt
   Files      Files[]
   Categories Categories[]
   Folders    Folders[]
+
   @@map("user")
 }
 
@@ -63,10 +68,29 @@ model Folders {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   Files     Files[]
+
   @@map("folder")
 }
 
-enum Role {
-  ADMIN
-  CLIENT
+model Usage {
+  id        String   @id @unique @default(cuid())
+  user      Users    @relation(fields: [userId], references: [id])
+  userId    String   @unique
+  used      BigInt   @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("usage")
+}
+
+model Role {
+  id        String   @id @unique @default(cuid())
+  name      String
+  label     String
+  Users     Users[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  limit     BigInt   @default(500000) // 500000 KB -> 500 MB
+
+  @@map("role")
 }

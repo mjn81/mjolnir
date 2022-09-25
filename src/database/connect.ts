@@ -20,7 +20,6 @@ export const createMongo = () =>
 export const getMongo = () => db;
 
 let s3;
-/// later change to singelton
 export const createS3 = () => {
   s3 = new S3Client({
     region: 'default',

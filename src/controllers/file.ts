@@ -1,11 +1,15 @@
 import { Request, Response } from 'express';
 import { ValidatedRequest } from 'express-joi-validation';
-import { DeleteObjectCommand, GetObjectCommand, PutObjectCommand } from '@aws-sdk/client-s3';
+import {
+  DeleteObjectCommand,
+  GetObjectCommand,
+  PutObjectCommand,
+} from '@aws-sdk/client-s3';
 import { nanoid } from 'nanoid';
 
 import { FileUploadError, ValidationError } from '../errors';
 import { MESSAGES } from '../constants';
-import { BUCKET_NAME, getMongo, prisma, getS3 } from '../database';
+import { BUCKET_NAME, prisma, getS3 } from '../database';
 import { roleBaseAuth } from '../helpers';
 import { IFileServeSchema, IFileUpdateSchema } from '../schemas';
 
@@ -68,7 +72,6 @@ class FileController {
   }
   /// adding diffrent modes 1 - public (for distrobuters) 2 - private
   async serve(req: ValidatedRequest<IFileServeSchema>, res: Response) {
-    
     const { id } = req.params;
     const file = await prisma.files.findFirstOrThrow({
       where: {
@@ -80,16 +83,13 @@ class FileController {
       },
     });
 
-    
-
     res.setHeader('Content-Type', file.mimeType);
     res.setHeader('Accepted-Ranges', 'bytes');
     const s3 = getS3();
     const param = { Bucket: BUCKET_NAME, Key: file.path };
-    
+
     const data = await s3.send(new GetObjectCommand(param));
     data.Body.pipe(res);
-
   }
 
   async delete(req: ValidatedRequest<IFileServeSchema>, res: Response) {

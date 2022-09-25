@@ -15,14 +15,15 @@ model Files {
   name         String
   path         String
   mimeType     String
-  category     Categories? @relation(fields: [categoriesId], references: [id])
+  category     Categories? @relation(fields: [categoriesId], references: [id], onDelete: SetNull)
   categoriesId String?
-  createdAt    DateTime    @default(now())
-  updatedAt    DateTime    @updatedAt
   user         Users       @relation(fields: [usersId], references: [id], onDelete: Cascade)
   usersId      String
-  folder       Folders?    @relation(fields: [foldersId], references: [id])
+  size         Int
+  folder       Folders?    @relation(fields: [foldersId], references: [id], onDelete: SetNull)
   foldersId    String?
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
 
   @@map("file")
 }
@@ -30,7 +31,7 @@ model Files {
 model Categories {
   id        String   @id @unique @default(cuid())
   name      String
-  user      Users    @relation(fields: [usersId], references: [id])
+  user      Users    @relation(fields: [usersId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   Files     Files[]
@@ -45,9 +46,8 @@ model Users {
   userName   String
   email      String       @unique
   password   String
-  role       Role         @relation(fields: [roleId], references: [id])
-  roleId     String
-  used       Usage?
+  role       Role         @default(CLIENT)
+  usage      Usage?
   createdAt  DateTime     @default(now())
   updatedAt  DateTime     @updatedAt
   Files      Files[]
@@ -61,9 +61,9 @@ model Folders {
   id        String    @id @unique @default(cuid())
   name      String?
   parentId  String?
-  parent    Folders?  @relation("parents", fields: [parentId], references: [id])
+  parent    Folders?  @relation("parents", fields: [parentId], references: [id], onDelete: Cascade)
   Folders   Folders[] @relation("parents")
-  user      Users     @relation(fields: [usersId], references: [id])
+  user      Users     @relation(fields: [usersId], references: [id], onDelete: Cascade)
   usersId   String
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
@@ -74,23 +74,17 @@ model Folders {
 
 model Usage {
   id        String   @id @unique @default(cuid())
-  user      Users    @relation(fields: [userId], references: [id])
+  user      Users    @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String   @unique
   used      BigInt   @default(0)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  limit     BigInt   @default(500000000) // 500MB in bytes
 
   @@map("usage")
 }
 
-model Role {
-  id        String   @id @unique @default(cuid())
-  name      String
-  label     String
-  Users     Users[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  limit     BigInt   @default(500000) // 500000 KB -> 500 MB
-
-  @@map("role")
+enum Role {
+  ADMIN
+  CLIENT
 }

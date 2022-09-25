@@ -25,6 +25,25 @@ class FileController {
     if (!file) {
       throw new FileUploadError(MESSAGES['FILE_EMPTY']);
     }
+
+    // check users usage
+    const userUsage = await prisma.usage.findUniqueOrThrow({
+      where: {
+        userId: user.id,
+      },
+      select: {
+        limit: true,
+        used: true,
+      },
+    });
+    const size = file.size;
+    const totalSize = userUsage.used + BigInt(size);
+    const remaining  = userUsage.limit - totalSize
+    if (remaining < 0) {
+      throw new FileUploadError(MESSAGES['FILE_LIMIT_EXCEEDED']);
+    }
+
+
     const s3 = getS3();
     const id = nanoid();
     const key = `${user.id}/${id}-${file.originalname}`;
@@ -36,12 +55,22 @@ class FileController {
     };
 
     await s3.send(new PutObjectCommand(uploadParams));
+    
+    await prisma.usage.update({
+      where: {
+        userId: user.id,
+      },
+      data: {
+        used: totalSize,
+      },
+    });
 
     const fileData = await prisma.files.create({
       data: {
         name: name ?? file.originalname,
         path: key,
         mimeType: file.mimetype,
+        size: size,
         category: {
           connect: {
             id: category,
@@ -93,7 +122,7 @@ class FileController {
   }
 
   async delete(req: ValidatedRequest<IFileServeSchema>, res: Response) {
-    await roleBaseAuth(prisma, req.user);
+    const user = await roleBaseAuth(prisma, req.user);
     const { id } = req.params;
     const file = await prisma.files.delete({
       where: {
@@ -103,12 +132,25 @@ class FileController {
         id: true,
         name: true,
         path: true,
+        size: true,
       },
     });
 
     const s3 = getS3();
     const param = { Bucket: BUCKET_NAME, Key: file.path };
     await s3.send(new DeleteObjectCommand(param));
+
+    const usage = await prisma.usage.update({
+      where: {
+        userId: user.id,
+      },
+      data: {
+        used: {
+          decrement: file.size,
+        },
+      }
+    });
+
     return res.send({
       message: MESSAGES['FILE_DELETED'],
       file,

@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "usage" ADD COLUMN     "limit" BIGINT NOT NULL DEFAULT 500000000;

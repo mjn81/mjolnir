@@ -60,7 +60,23 @@ class AuthController {
         userName,
         email,
         password: hashedPassword,
+        usage: {
+          create: true,
+        }
       },
+      select: {
+        id: true,
+        email: true,
+        userName: true,
+        fullName: true,
+        role: true,
+        usage: {
+          select: {
+            limit: true,
+            used: true,
+          }
+        }
+      }
     });
 
     const token = createToken({
@@ -71,12 +87,7 @@ class AuthController {
     res.send({
       message: MESSAGES['REGISTER_SUCCESS'],
       token,
-      user: {
-        id: newUser.id,
-        userName: newUser.userName,
-        email: newUser.email,
-        role: newUser.role,
-      },
+      user: newUser,
     });
   }
 

@@ -36,6 +36,9 @@ class UserController {
         email,
         password: hashedPassword,
         role: Role[role],
+        usage: {
+          create: true,
+        }
       },
     });
 
@@ -58,9 +61,12 @@ class UserController {
   }
 
   async delete(req: ValidatedRequest<IUserDeleteSchema>, res: Response) {
-    await roleBaseAuth(prisma, req.user, [Role.ADMIN]);
+    const user = await roleBaseAuth(prisma, req.user);
     const { id } = req.params;
-    const user = await prisma.users.delete({
+    if (user.role !== Role.ADMIN || user.id !== id) {
+      throw new InvalidRoleError(MESSAGES['INSUFFICIENT_PERMISSION']);
+    }
+    const deleted = await prisma.users.delete({
       where: {
         id,
       },
@@ -68,7 +74,7 @@ class UserController {
 
     return res.send({
       message: MESSAGES['USER_DELETED'],
-      user,
+      user: deleted,
     });
   }
 

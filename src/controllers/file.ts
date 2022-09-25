@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
 import { ValidatedRequest } from 'express-joi-validation';
-import { GridFSBucket, ObjectId } from 'mongodb';
-import { PutObjectCommand } from '@aws-sdk/client-s3';
+import { DeleteObjectCommand, GetObjectCommand, PutObjectCommand } from '@aws-sdk/client-s3';
 import { nanoid } from 'nanoid';
 
 import { FileUploadError, ValidationError } from '../errors';
@@ -25,15 +24,15 @@ class FileController {
     const s3 = getS3();
     const id = nanoid();
     const key = `${user.id}/${id}-${file.originalname}`;
-    
+
     const uploadParams = {
       Bucket: BUCKET_NAME,
       Key: key,
       Body: file.buffer,
     };
-    
+
     await s3.send(new PutObjectCommand(uploadParams));
-  
+
     const fileData = await prisma.files.create({
       data: {
         name: name ?? file.originalname,
@@ -69,6 +68,7 @@ class FileController {
   }
   /// adding diffrent modes 1 - public (for distrobuters) 2 - private
   async serve(req: ValidatedRequest<IFileServeSchema>, res: Response) {
+    
     const { id } = req.params;
     const file = await prisma.files.findFirstOrThrow({
       where: {
@@ -80,26 +80,16 @@ class FileController {
       },
     });
 
-    const fileId = new ObjectId(file.path);
+    
 
     res.setHeader('Content-Type', file.mimeType);
     res.setHeader('Accepted-Ranges', 'bytes');
+    const s3 = getS3();
+    const param = { Bucket: BUCKET_NAME, Key: file.path };
+    
+    const data = await s3.send(new GetObjectCommand(param));
+    data.Body.pipe(res);
 
-    const db = getMongo();
-    const bucket = new GridFSBucket(db, {
-      bucketName: 'files',
-    });
-    const downloadStream = bucket.openDownloadStream(fileId);
-    downloadStream.on('data', (chunk) => {
-      res.write(chunk);
-    });
-
-    downloadStream.on('error', (err) => {
-      throw new FileUploadError(err.message);
-    });
-    downloadStream.on('end', () => {
-      res.end();
-    });
   }
 
   async delete(req: ValidatedRequest<IFileServeSchema>, res: Response) {
@@ -115,12 +105,10 @@ class FileController {
         path: true,
       },
     });
-    const db = getMongo();
-    const bucket = new GridFSBucket(db, {
-      bucketName: 'files',
-    });
-    const fileId = new ObjectId(file.path);
-    await bucket.delete(fileId);
+
+    const s3 = getS3();
+    const param = { Bucket: BUCKET_NAME, Key: file.path };
+    await s3.send(new DeleteObjectCommand(param));
     return res.send({
       message: MESSAGES['FILE_DELETED'],
       file,

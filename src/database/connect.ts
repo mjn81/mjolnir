@@ -31,7 +31,7 @@ export const createS3 = () => {
     },
   });
   return s3;
-}
+};
 
 export const getS3 = () => s3;
 

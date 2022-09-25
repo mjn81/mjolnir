@@ -47,7 +47,7 @@ export const SWAGGER_OPTS = {
 };
 
 const main = () => {
-  createMongo();
+  // createMongo();
   createS3();
   const app = express();
   app.disable('x-powered-by');

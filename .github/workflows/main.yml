@@ -7,19 +7,13 @@ on:
 
 jobs:
 
-  build:
-    name: build
+  pull_deploy:
     runs-on: ubuntu-latest
     
     steps:
-      - name: checkout repo
-      - uses: actions/checkout@v3
-
-  pull_deploy:
-    runs-on: ubuntu-latest
-    needs: build
-    
-    steps: 
+      - name: checkout main
+      - uses: actions/checkout@main    
+   
       - name: deploy to my vps
       - uses: appleboy/ssh-action@v0.1.3
       - with:

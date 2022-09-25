@@ -14,7 +14,7 @@ router.post(
   authController.register,
 );
 
-router.get('/distToken', authController.distToken);
+router.get('/dist-token', authController.distToken);
 
 router.get('/me', authController.profile);
 

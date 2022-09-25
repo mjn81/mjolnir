@@ -1,11 +1,12 @@
 import { Request, Response } from 'express';
 import { ValidatedRequest } from 'express-joi-validation';
 import { GridFSBucket, ObjectId } from 'mongodb';
-import { Readable } from 'stream';
+import { PutObjectCommand } from '@aws-sdk/client-s3';
+import { nanoid } from 'nanoid';
 
 import { FileUploadError, ValidationError } from '../errors';
 import { MESSAGES } from '../constants';
-import { getMongo, prisma } from '../database';
+import { BUCKET_NAME, getMongo, prisma, getS3 } from '../database';
 import { roleBaseAuth } from '../helpers';
 import { IFileServeSchema, IFileUpdateSchema } from '../schemas';
 
@@ -21,27 +22,22 @@ class FileController {
     if (!file) {
       throw new FileUploadError(MESSAGES['FILE_EMPTY']);
     }
-
-    const readableFileStream = new Readable();
-    readableFileStream.push(file.buffer);
-    readableFileStream.push(null);
-
-    const db = getMongo();
-    const bucket = new GridFSBucket(db, {
-      bucketName: 'files',
-    });
-
-    const uploadStream = bucket.openUploadStream(name);
-    const { id } = uploadStream;
-    readableFileStream.pipe(uploadStream);
-    uploadStream.on('error', () => {
-      throw new FileUploadError(MESSAGES['SERVER_ERROR']);
-    });
-
+    const s3 = getS3();
+    const id = nanoid();
+    const key = `${user.id}/${id}-${file.originalname}`;
+    
+    const uploadParams = {
+      Bucket: BUCKET_NAME,
+      Key: key,
+      Body: file.buffer,
+    };
+    
+    await s3.send(new PutObjectCommand(uploadParams));
+  
     const fileData = await prisma.files.create({
       data: {
         name: name ?? file.originalname,
-        path: id.toString(),
+        path: key,
         mimeType: file.mimetype,
         category: {
           connect: {

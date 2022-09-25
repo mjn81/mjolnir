@@ -20,7 +20,7 @@ import {
   userAuthMiddleware,
   logMiddleware,
 } from './middlewares';
-import { createMongo } from './database';
+import { createMongo, createS3 } from './database';
 
 declare global {
   namespace Express {
@@ -48,6 +48,7 @@ export const SWAGGER_OPTS = {
 
 const main = () => {
   createMongo();
+  createS3();
   const app = express();
   app.disable('x-powered-by');
 

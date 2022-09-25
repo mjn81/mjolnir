@@ -1,3 +1,4 @@
+import { S3Client } from '@aws-sdk/client-s3';
 import { PrismaClient } from '@prisma/client';
 import { MongoClient } from 'mongodb';
 
@@ -17,3 +18,21 @@ export const createMongo = () =>
   });
 
 export const getMongo = () => db;
+
+let s3;
+/// later change to singelton
+export const createS3 = () => {
+  s3 = new S3Client({
+    region: 'default',
+    endpoint: process.env.S3_ENDPOINT,
+    credentials: {
+      accessKeyId: process.env.S3_ACCESS_KEY ?? '',
+      secretAccessKey: process.env.S3_SECRET ?? '',
+    },
+  });
+  return s3;
+}
+
+export const getS3 = () => s3;
+
+export const BUCKET_NAME = 'mjolnir';

@@ -1,7 +1,7 @@
 export const MESSAGES = {
   FILE_EMPTY: 'No files were selected.',
   FILE_UPLOADED: 'File uploaded!',
-  PLAY_GROUND: 'hello! this is playground!!',
+  PLAY_GROUND: 'hello! this is playground test successfull!!',
   FIELD_EMPTY: 'One or more fields are empty.',
   WRONG_PASSWORD: 'Wrong password.',
   LOGIN_SUCCESS: 'Login successful!!',

@@ -1,11 +1,11 @@
-import { Request, Response } from "express";
-import { ValidatedRequest } from "express-joi-validation";
-import { Role } from "@prisma/client";
+import { Request, Response } from 'express';
+import { ValidatedRequest } from 'express-joi-validation';
+import { Role } from '@prisma/client';
 
-import { IUsageDetailSchema, IUsageUpdateSchema } from "../schemas";
-import { roleBaseAuth } from "../helpers";
-import { prisma } from "../database";
-import { MESSAGES } from "../constants";
+import { IUsageDetailSchema, IUsageUpdateSchema } from '../schemas';
+import { roleBaseAuth } from '../helpers';
+import { prisma } from '../database';
+import { MESSAGES } from '../constants';
 import { InvalidRoleError } from '../errors';
 
 class UsageController {
@@ -41,7 +41,8 @@ class UsageController {
   ) => {
     const user = await roleBaseAuth(prisma, req.user);
     const { id } = req.params;
-    if (user.role !== Role.ADMIN || user.id !== id) {
+    
+    if (user.role !== Role.ADMIN && user.id !== id) {
       throw new InvalidRoleError(MESSAGES['INSUFFICIENT_PERMISSION']);
     }
     const usage = await prisma.usage.findUnique({

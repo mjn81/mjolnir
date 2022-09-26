@@ -27,9 +27,9 @@ class AuthController {
           select: {
             limit: true,
             used: true,
-          }
-        }
-      }
+          },
+        },
+      },
     });
     const verify = await hashVerify(user.password, password);
 
@@ -40,7 +40,7 @@ class AuthController {
       username: user.userName,
       id: user.id,
     });
-    const { password:_ , ...rest } = user;
+    const { password: _, ...rest } = user;
     res.json({
       message: MESSAGES['LOGIN_SUCCESS'],
       token,

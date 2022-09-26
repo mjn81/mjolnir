@@ -65,7 +65,7 @@ const main = () => {
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
   app.use(userAuthMiddleware);
-  
+
   // big int parser
   bigIntJsonParser();
 

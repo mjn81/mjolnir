@@ -37,7 +37,7 @@ class UserController {
         password: hashedPassword,
         role: Role[role],
         usage: {
-          create: true,
+          create: {},
         },
       },
     });
@@ -87,7 +87,7 @@ class UserController {
       },
     });
 
-    return res.send({
+    return res.json({
       user,
     });
   }

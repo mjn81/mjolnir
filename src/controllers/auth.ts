@@ -8,7 +8,6 @@ import { prisma } from '../database';
 import { ILoginSchema, IRegisterSchema } from '../schemas';
 import { roleBaseAuth } from '../helpers';
 
-
 class AuthController {
   async login(req: ValidatedRequest<ILoginSchema>, res: Response) {
     const { email, password } = req.body;
@@ -17,8 +16,21 @@ class AuthController {
       where: {
         email,
       },
+      select: {
+        id: true,
+        email: true,
+        userName: true,
+        fullName: true,
+        role: true,
+        password: true,
+        usage: {
+          select: {
+            limit: true,
+            used: true,
+          }
+        }
+      }
     });
-
     const verify = await hashVerify(user.password, password);
 
     if (!verify)
@@ -28,16 +40,11 @@ class AuthController {
       username: user.userName,
       id: user.id,
     });
-
-    res.send({
+    const { password:_ , ...rest } = user;
+    res.json({
       message: MESSAGES['LOGIN_SUCCESS'],
       token,
-      user: {
-        id: user.id,
-        userName: user.userName,
-        email: user.email,
-        role: user.role,
-      },
+      user: rest,
     });
   }
 
@@ -61,8 +68,8 @@ class AuthController {
         email,
         password: hashedPassword,
         usage: {
-          create: true,
-        }
+          create: {},
+        },
       },
       select: {
         id: true,
@@ -74,9 +81,9 @@ class AuthController {
           select: {
             limit: true,
             used: true,
-          }
-        }
-      }
+          },
+        },
+      },
     });
 
     const token = createToken({
@@ -84,7 +91,7 @@ class AuthController {
       id: newUser.id,
     });
 
-    res.send({
+    res.json({
       message: MESSAGES['REGISTER_SUCCESS'],
       token,
       user: newUser,
@@ -98,7 +105,7 @@ class AuthController {
       id: user.id,
     });
 
-    res.send({
+    res.json({
       message: MESSAGES['DISTRIBUTOR_TOKEN_SUCCESS'],
       token,
       user: {
@@ -111,7 +118,7 @@ class AuthController {
 
   async profile(req: Request, res: Response) {
     const user = await roleBaseAuth(prisma, req.user);
-    res.send({
+    res.json({
       user: {
         ...user,
       },

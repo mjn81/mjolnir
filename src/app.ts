@@ -21,6 +21,7 @@ import {
   logMiddleware,
 } from './middlewares';
 import { createMongo, createS3 } from './database';
+import { bigIntJsonParser } from './utils';
 
 declare global {
   namespace Express {
@@ -64,6 +65,10 @@ const main = () => {
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
   app.use(userAuthMiddleware);
+  
+  // big int parser
+  bigIntJsonParser();
+
   // routers
   app.use(
     '/api/doc',

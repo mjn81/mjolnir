@@ -38,7 +38,7 @@ class UserController {
         role: Role[role],
         usage: {
           create: true,
-        }
+        },
       },
     });
 

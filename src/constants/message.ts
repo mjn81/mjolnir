@@ -18,7 +18,8 @@ export const MESSAGES = {
   FILE_DELETED: 'File deleted!!',
   FILE_NOT_FOUND: 'File not found!!',
   FILE_UPDATED: 'File Updated!!',
-  FILE_LIMIT_EXCEEDED: 'It exceeds your file limit! Please buy a better plan.',
+  FILE_LIMIT_EXCEEDED:
+    'It exceeds your file limit! Please buy a better plan.',
   INVALID_ROLE_ERROR: 'Invalid role!!',
   USER_EXISTS: 'User already exists!!',
   USER_CREATED: 'User created successfully!!',

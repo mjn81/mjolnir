@@ -38,11 +38,10 @@ class FileController {
     });
     const size = file.size;
     const totalSize = userUsage.used + BigInt(size);
-    const remaining  = userUsage.limit - totalSize
+    const remaining = userUsage.limit - totalSize;
     if (remaining < 0) {
       throw new FileUploadError(MESSAGES['FILE_LIMIT_EXCEEDED']);
     }
-
 
     const s3 = getS3();
     const id = nanoid();
@@ -55,7 +54,7 @@ class FileController {
     };
 
     await s3.send(new PutObjectCommand(uploadParams));
-    
+
     await prisma.usage.update({
       where: {
         userId: user.id,
@@ -148,7 +147,7 @@ class FileController {
         used: {
           decrement: file.size,
         },
-      }
+      },
     });
 
     return res.send({

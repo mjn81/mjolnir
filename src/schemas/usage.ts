@@ -22,12 +22,11 @@ export const usageUpdateParamSchema = Joi.object({
   id: Joi.string().required(),
 });
 
-
 export interface IUsageUpdateSchema extends ValidatedRequestSchema {
   [ContainerTypes.Params]: {
     id: string;
-  }
-  [ContainerTypes.Body]: {  
+  };
+  [ContainerTypes.Body]: {
     limit: string;
   };
 }

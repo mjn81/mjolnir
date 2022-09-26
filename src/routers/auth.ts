@@ -2,7 +2,7 @@ import { Router } from 'express';
 
 import { authController } from '../controllers';
 import { bodyValidator } from '../middlewares';
-import { loginSchema, registerSchema } from '../schemas';
+import { distTokenSchema, loginSchema, registerSchema } from '../schemas';
 
 const router = Router();
 
@@ -14,7 +14,7 @@ router.post(
   authController.register,
 );
 
-router.get('/dist-token', authController.distToken);
+router.post('/dist-token', bodyValidator(distTokenSchema), authController.distToken);
 
 router.get('/me', authController.profile);
 

@@ -1,11 +1,16 @@
 import { Request, Response } from 'express';
 import { ValidatedRequest } from 'express-joi-validation';
+import { nanoid } from 'nanoid';
 
 import { MESSAGES } from '../constants';
 import { SingleValidationError, ValidationError } from '../errors';
 import { createToken, hashVerify, hash, createDistToken } from '../utils';
 import { prisma } from '../database';
-import { ILoginSchema, IRegisterSchema } from '../schemas';
+import {
+  IDistTokenSchema,
+  ILoginSchema,
+  IRegisterSchema,
+} from '../schemas';
 import { roleBaseAuth } from '../helpers';
 
 class AuthController {
@@ -98,16 +103,91 @@ class AuthController {
     });
   }
 
-  async distToken(req: Request, res: Response) {
+  async distToken(req: ValidatedRequest<IDistTokenSchema>, res: Response) {
     const user = await roleBaseAuth(prisma, req.user);
+    const { category, folder } = req.body;
+
+    if (!category && !folder)
+      throw new SingleValidationError(MESSAGES['FIELD_EMPTY']);
+
     const token = createDistToken({
       username: user.userName,
       id: user.id,
     });
+    let data: any = {
+      token,
+      user: {
+        connect: {
+          id: user.id,
+        },
+      },
+    };
 
+    if (folder)
+      data = {
+        ...data,
+        folder: {
+          connect: {
+            id: folder,
+          },
+        },
+      };
+    if (category)
+      data = {
+        ...data,
+        category: {
+          connect: {
+            id: category,
+          },
+        },
+      };
+
+    const tokenData = await prisma.distToken.create({
+      data: data,
+      select: {
+        token: true,
+        category: {
+          select: {
+            name: true,
+          },
+        },
+        folder: {
+          select: {
+            name: true,
+          },
+        },
+      },
+    });
+    let route = await prisma.distRoute.findUnique({
+      where: {
+        userId: user.id,
+      },
+      select: {
+        route: true,
+      },
+    });
+    if (!route) {
+      const distRoute = nanoid();
+      route = await prisma.distRoute.create({
+        data: {
+          route: distRoute,
+          user: {
+            connect: {
+              id: user.id,
+            },
+          },
+        },
+        select: {
+          route: true,
+        },
+      });
+    }
     res.json({
       message: MESSAGES['DISTRIBUTOR_TOKEN_SUCCESS'],
-      token,
+      dist: {
+        ...tokenData,
+        ...route,
+      },
       user: {
         id: user.id,
         userName: user.userName,

@@ -29,13 +29,14 @@ model Files {
 }
 
 model Categories {
-  id        String   @id @unique @default(cuid())
+  id        String      @id @unique @default(cuid())
   name      String
-  user      Users    @relation(fields: [usersId], references: [id], onDelete: Cascade)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  user      Users       @relation(fields: [usersId], references: [id], onDelete: Cascade)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
   Files     Files[]
   usersId   String
+  distToken DistToken[]
 
   @@map("category")
 }
@@ -53,21 +54,24 @@ model Users {
   Files      Files[]
   Categories Categories[]
   Folders    Folders[]
+  distToken  DistToken[]
+  distRoute  DistRoute?
 
   @@map("user")
 }
 
 model Folders {
-  id        String    @id @unique @default(cuid())
+  id        String      @id @unique @default(cuid())
   name      String?
   parentId  String?
-  parent    Folders?  @relation("parents", fields: [parentId], references: [id], onDelete: Cascade)
-  Folders   Folders[] @relation("parents")
-  user      Users     @relation(fields: [usersId], references: [id], onDelete: Cascade)
+  parent    Folders?    @relation("parents", fields: [parentId], references: [id], onDelete: Cascade)
+  Folders   Folders[]   @relation("parents")
+  user      Users       @relation(fields: [usersId], references: [id], onDelete: Cascade)
   usersId   String
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
   Files     Files[]
+  distToken DistToken[]
 
   @@map("folder")
 }
@@ -82,6 +86,32 @@ model Usage {
   limit     BigInt   @default(500000000) // 500MB in bytes
 
   @@map("usage")
+}
+
+model DistToken {
+  id         String      @id @unique @default(cuid())
+  token      String      @unique
+  category   Categories? @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  categoryId String?
+  folder     Folders?    @relation(fields: [folderId], references: [id], onDelete: Cascade)
+  folderId   String?
+  user       Users       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     String
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+
+  @@map("dist_token")
+}
+
+model DistRoute {
+  id        String   @id @unique @default(cuid())
+  route     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      Users    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String   @unique
+
+  @@map("dist_route")
 }
 
 enum Role {

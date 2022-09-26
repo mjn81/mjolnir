@@ -41,7 +41,7 @@ class UsageController {
   ) => {
     const user = await roleBaseAuth(prisma, req.user);
     const { id } = req.params;
-    
+
     if (user.role !== Role.ADMIN && user.id !== id) {
       throw new InvalidRoleError(MESSAGES['INSUFFICIENT_PERMISSION']);
     }

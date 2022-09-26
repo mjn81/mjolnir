@@ -15,13 +15,19 @@ export interface IUsageDetailSchema extends ValidatedRequestSchema {
 }
 
 export const usageUpdateSchema = Joi.object({
-  id: Joi.string().required(),
   limit: Joi.number().required(),
 });
 
+export const usageUpdateParamSchema = Joi.object({
+  id: Joi.string().required(),
+});
+
+
 export interface IUsageUpdateSchema extends ValidatedRequestSchema {
-  [ContainerTypes.Body]: {
+  [ContainerTypes.Params]: {
     id: string;
+  }
+  [ContainerTypes.Body]: {  
     limit: string;
   };
 }

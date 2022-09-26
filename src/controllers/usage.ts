@@ -14,7 +14,8 @@ class UsageController {
     res: Response,
   ) => {
     await roleBaseAuth(prisma, req.user, [Role.ADMIN]);
-    const { limit, id } = req.body;
+    const { id } = req.params;
+    const { limit } = req.body;
     const limitNumber = BigInt(limit);
     const usage = await prisma.usage.update({
       where: {

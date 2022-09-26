@@ -14,7 +14,11 @@ router.post(
   authController.register,
 );
 
-router.post('/dist-token', bodyValidator(distTokenSchema), authController.distToken);
+router.post(
+  '/dist-token',
+  bodyValidator(distTokenSchema),
+  authController.distToken,
+);
 
 router.get('/me', authController.profile);
 

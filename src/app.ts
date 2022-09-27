@@ -14,6 +14,7 @@ import {
   folderRouter,
   driveRouter,
   usageRouter,
+  profileRouter,
 } from './routers';
 import {
   errorHandler,
@@ -21,9 +22,8 @@ import {
   userAuthMiddleware,
   logMiddleware,
 } from './middlewares';
-import { createMongo, createS3 } from './database';
+import { createS3 } from './database';
 import { bigIntJsonParser } from './utils';
-import { profileRouter } from 'routers/profile';
 
 declare global {
   namespace Express {

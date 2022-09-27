@@ -1,5 +1,6 @@
-import { profileController } from 'controllers';
 import { Router } from 'express';
+
+import { profileController } from '../controllers';
 import { paramsValidator, upload } from '../middlewares';
 import { serveProfileSchema } from '../schemas';
 

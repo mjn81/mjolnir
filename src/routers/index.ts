@@ -6,3 +6,4 @@ export * from './user';
 export * from './folder';
 export * from './drive';
 export * from './usage';
+export * from './profile';

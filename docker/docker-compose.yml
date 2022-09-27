@@ -26,25 +26,16 @@ services:
   #   networks:
   #     - backend
 
-  mongo:
-    image: mongo:5.0.10
-    container_name: mongo_c
-    restart: always
-    volumes:
-      - ./mongodata:/data/db
-    networks:
-      - backend
-
   api:
     build:
       context: .
       dockerfile: Dockerfile
       tags:
         - "production"
+    restart: always
     container_name: api_c
     depends_on:
       - postgres
-      - mongo
     ports:
       - "4000:4000"
     networks:
@@ -68,3 +59,13 @@ services:
 networks:
   backend:
     driver: bridge
+
+# used for v.1.0.2 and below
+# mongo:
+  #   image: mongo:5.0.10
+  #   container_name: mongo_c
+  #   restart: always
+  #   volumes:
+  #     - ./mongodata:/data/db
+  #   networks:
+  #     - backend

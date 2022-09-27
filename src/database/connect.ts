@@ -29,6 +29,7 @@ export const createS3 = () => {
       secretAccessKey: process.env.S3_SECRET ?? '',
     },
   });
+  console.log('object storage connected');
   return s3;
 };
 

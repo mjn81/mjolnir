@@ -151,11 +151,11 @@ class DistController {
     const file = distFile.file;
     res.setHeader('Content-Type', file.mimeType);
     res.setHeader('Accepted-Ranges', 'bytes');
-     const s3 = getS3();
-     const param = { Bucket: BUCKET_NAME.drive, Key: file.path };
+    const s3 = getS3();
+    const param = { Bucket: BUCKET_NAME.drive, Key: file.path };
 
-     const data = await s3.send(new GetObjectCommand(param));
-     data.Body.pipe(res);
+    const data = await s3.send(new GetObjectCommand(param));
+    data.Body.pipe(res);
   };
 }
 

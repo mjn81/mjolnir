@@ -30,7 +30,6 @@ router.put(
   fileController.changeAccess,
 );
 
-
 router.delete(
   '/:id',
   paramsValidator(fileServeSchema),
@@ -43,6 +42,5 @@ router.put(
   bodyValidator(fileUpdateBody),
   fileController.update,
 );
-
 
 export const fileRouter = router;

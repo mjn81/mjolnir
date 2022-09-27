@@ -5,9 +5,13 @@ import { serveProfileSchema } from '../schemas';
 
 const router = Router();
 
-router.post('/' , upload.single('profile'), profileController.create);
+router.post('/', upload.single('profile'), profileController.create);
 
-router.delete('/:id', paramsValidator(serveProfileSchema), profileController.delete);
+router.delete(
+  '/:id',
+  paramsValidator(serveProfileSchema),
+  profileController.delete,
+);
 
 router.get(
   '/:id',

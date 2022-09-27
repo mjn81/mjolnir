@@ -30,9 +30,13 @@ export const fileUploadParam = Joi.object({
 
 export const fileUpdateBody = Joi.object({
   name: Joi.string().required(),
-  category: Joi.array().items(Joi.object({
-    id: Joi.string().required(),
-  })) .required(),
+  category: Joi.array()
+    .items(
+      Joi.object({
+        id: Joi.string().required(),
+      }),
+    )
+    .required(),
 });
 
 export interface IFileUpdateSchema extends ValidatedRequestSchema {
@@ -59,5 +63,3 @@ export interface IFileChangeAccessSchema extends ValidatedRequestSchema {
     id: string;
   };
 }
-
-

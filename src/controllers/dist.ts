@@ -113,8 +113,6 @@ class DistController {
     if (file.user.id !== distRoute.user.id)
       throw new AuthorizationError(MESSAGES['INSUFFICIENT_PERMISSION']);
 
-    
-
     if (file.access === Access.PRIVATE) {
       if (!token) throw new AuthorizationError(MESSAGES['UNAUTHORIZED']);
 

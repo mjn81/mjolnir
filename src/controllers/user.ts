@@ -148,15 +148,15 @@ class UserController {
           select: {
             limit: true,
             used: true,
-          }
-        }
-      }
+          },
+        },
+      },
     });
 
     res.json({
-      ...userProfile
+      ...userProfile,
     });
-  }
+  };
 }
 
 export const userController = new UserController();

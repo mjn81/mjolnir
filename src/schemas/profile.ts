@@ -1,5 +1,8 @@
-import { ContainerTypes, ValidatedRequestSchema } from "express-joi-validation";
-import Joi from "joi";
+import {
+  ContainerTypes,
+  ValidatedRequestSchema,
+} from 'express-joi-validation';
+import Joi from 'joi';
 
 export const serveProfileSchema = Joi.object({
   id: Joi.string().required(),

@@ -29,5 +29,4 @@ export const MESSAGES = {
   USER_UPDATED: 'User updated successfully!!',
   PROFILE_CREATED: 'Profile created successfully!!',
   PROFILE_DELETED: 'Profile deleted successfully!!',
-
 };

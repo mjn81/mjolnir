@@ -34,4 +34,7 @@ export const createS3 = () => {
 
 export const getS3 = () => s3;
 
-export const BUCKET_NAME = 'mjolnir';
+export const BUCKET_NAME = {
+  drive: 'mjolnir',
+  profile: 'mjolnir-profile',
+};

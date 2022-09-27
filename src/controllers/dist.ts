@@ -1,13 +1,15 @@
 import { Request, Response } from 'express';
-import { Role } from '@prisma/client';
+import { Access, Role } from '@prisma/client';
 import { nanoid } from 'nanoid';
 import { ValidatedRequest } from 'express-joi-validation';
 
 import { roleBaseAuth } from '../helpers';
-import { prisma } from '../database';
+import { BUCKET_NAME, getS3, prisma } from '../database';
 import { IDeleteDistSchema, IServeDistSchema } from '../schemas';
 import { AuthorizationError } from '../errors';
 import { MESSAGES } from '../constants';
+import category from 'docs/category';
+import { GetObjectCommand } from '@aws-sdk/client-s3';
 
 class DistController {
   /// basic works for {dist routes}
@@ -104,22 +106,56 @@ class DistController {
       where: {
         fileId: id,
       },
-      include: {
+      select: {
+        access: true,
         file: {
           select: {
+            mimeType: true,
             path: true,
-            category: {
-              select: {
-                id: true,
-              },
-            },
-          },
-          include: {
             user: true,
+            category: true,
           },
         },
       },
     });
+
+    if (distFile.file.user.id !== distRoute.user.id)
+      throw new AuthorizationError(MESSAGES['INSUFFICIENT_PERMISSION']);
+
+    const access = distFile.access;
+
+    if (access === Access.PRIVATE) {
+      if (!token) throw new AuthorizationError(MESSAGES['UNAUTHORIZED']);
+
+      const distToken = await prisma.distToken.findUniqueOrThrow({
+        where: {
+          token: token,
+        },
+        select: {
+          user: true,
+          category: true,
+        },
+      });
+      if (distToken.user.id !== distRoute.user.id)
+        throw new AuthorizationError(MESSAGES['UNAUTHORIZED']);
+
+      const category = distToken.category;
+      const fileCats = distFile.file.category;
+      if (category) {
+        const exist = fileCats.find((cat) => cat.id === category.id);
+        if (!exist) {
+          throw new AuthorizationError(MESSAGES['UNAUTHORIZED']);
+        }
+      }
+    }
+    const file = distFile.file;
+    res.setHeader('Content-Type', file.mimeType);
+    res.setHeader('Accepted-Ranges', 'bytes');
+     const s3 = getS3();
+     const param = { Bucket: BUCKET_NAME.drive, Key: file.path };
+
+     const data = await s3.send(new GetObjectCommand(param));
+     data.Body.pipe(res);
   };
 }
 

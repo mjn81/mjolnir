@@ -48,7 +48,7 @@ class FileController {
     const key = `${user.id}/${id}-${file.originalname}`;
 
     const uploadParams = {
-      Bucket: BUCKET_NAME,
+      Bucket: BUCKET_NAME.drive,
       Key: key,
       Body: file.buffer,
     };
@@ -114,7 +114,7 @@ class FileController {
     res.setHeader('Content-Type', file.mimeType);
     res.setHeader('Accepted-Ranges', 'bytes');
     const s3 = getS3();
-    const param = { Bucket: BUCKET_NAME, Key: file.path };
+    const param = { Bucket: BUCKET_NAME.drive, Key: file.path };
 
     const data = await s3.send(new GetObjectCommand(param));
     data.Body.pipe(res);
@@ -136,7 +136,7 @@ class FileController {
     });
 
     const s3 = getS3();
-    const param = { Bucket: BUCKET_NAME, Key: file.path };
+    const param = { Bucket: BUCKET_NAME.drive, Key: file.path };
     await s3.send(new DeleteObjectCommand(param));
 
     const usage = await prisma.usage.update({

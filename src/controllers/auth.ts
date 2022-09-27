@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
 import { ValidatedRequest } from 'express-joi-validation';
-import { nanoid } from 'nanoid';
 
 import { MESSAGES } from '../constants';
 import { SingleValidationError, ValidationError } from '../errors';
@@ -103,6 +102,7 @@ class AuthController {
     });
   }
 
+  /// move to dist controller
   async distToken(req: ValidatedRequest<IDistTokenSchema>, res: Response) {
     const user = await roleBaseAuth(prisma, req.user);
     const { category } = req.body;
@@ -150,10 +150,8 @@ class AuthController {
       },
     });
     if (!route) {
-      const distRoute = nanoid();
       route = await prisma.distRoute.create({
         data: {
-          route: distRoute,
           user: {
             connect: {
               id: user.id,
@@ -179,14 +177,7 @@ class AuthController {
     });
   }
 
-  async profile(req: Request, res: Response) {
-    const user = await roleBaseAuth(prisma, req.user);
-    res.json({
-      user: {
-        ...user,
-      },
-    });
-  }
+ 
 }
 
 export const authController = new AuthController();

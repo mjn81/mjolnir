@@ -11,14 +11,19 @@ import { FileUploadError, ValidationError } from '../errors';
 import { MESSAGES } from '../constants';
 import { BUCKET_NAME, prisma, getS3 } from '../database';
 import { roleBaseAuth } from '../helpers';
-import { IFileServeSchema, IFileUpdateSchema } from '../schemas';
+import {
+  IFileChangeAccessSchema,
+  IFileServeSchema,
+  IFileUpdateSchema,
+} from '../schemas';
+import { Access } from '@prisma/client';
 
 class FileController {
-  async upload(req: Request, res: Response) {
+  async upload(req: ValidatedRequest<IFileUpdateSchema>, res: Response) {
     const user = await roleBaseAuth(prisma, req.user);
     const { name, category } = req.body;
 
-    if (!category)
+    if (category.length === 0)
       throw new ValidationError(MESSAGES['FIELD_EMPTY'], 'category');
 
     const file = req.file;
@@ -71,9 +76,7 @@ class FileController {
         mimeType: file.mimetype,
         size: size,
         category: {
-          connect: {
-            id: category,
-          },
+          connect: category,
         },
         user: {
           connect: {
@@ -98,14 +101,20 @@ class FileController {
       data: fileData,
     });
   }
-  /// adding diffrent modes 1 - public (for distrobuters) 2 - private
+
   async serve(req: ValidatedRequest<IFileServeSchema>, res: Response) {
+    const user = await roleBaseAuth(prisma, req.user);
     const { id } = req.params;
     const file = await prisma.file.findFirstOrThrow({
       where: {
         AND: [
           {
             id,
+          },
+          {
+            user: {
+              id: user.id,
+            },
           },
         ],
       },
@@ -123,9 +132,25 @@ class FileController {
   async delete(req: ValidatedRequest<IFileServeSchema>, res: Response) {
     const user = await roleBaseAuth(prisma, req.user);
     const { id } = req.params;
+
+    const uFile = await prisma.file.findFirstOrThrow({
+      where: {
+        AND: [
+          {
+            id,
+          },
+          {
+            user: {
+              id: user.id,
+            },
+          },
+        ],
+      },
+    });
+
     const file = await prisma.file.delete({
       where: {
-        id,
+        id: uFile.id,
       },
       select: {
         id: true,
@@ -139,7 +164,7 @@ class FileController {
     const param = { Bucket: BUCKET_NAME.drive, Key: file.path };
     await s3.send(new DeleteObjectCommand(param));
 
-    const usage = await prisma.usage.update({
+    await prisma.usage.update({
       where: {
         userId: user.id,
       },
@@ -221,9 +246,7 @@ class FileController {
       data: {
         name: name,
         category: {
-          connect: {
-            id: category,
-          },
+          connect: category,
         },
       },
       select: {
@@ -243,6 +266,48 @@ class FileController {
       data: updatedFile,
     });
   }
+
+  changeAccess = async (
+    req: ValidatedRequest<IFileChangeAccessSchema>,
+    res: Response,
+  ) => {
+    const user = await roleBaseAuth(prisma, req.user);
+    const { isPublic } = req.body;
+    const { id } = req.params;
+    await prisma.file.findFirstOrThrow({
+      where: {
+        AND: [
+          {
+            id: id,
+          },
+          {
+            user: {
+              id: user.id,
+            },
+          },
+        ],
+      },
+    });
+    const access = isPublic ? Access.PUBLIC : Access.PRIVATE;
+    const file = await prisma.file.update({
+      where: {
+        id: id,
+      },
+      data: {
+        access: access,
+      },
+      select: {
+        id: true,
+        name: true,
+        access: true,
+      },
+    });
+
+    res.json({
+      message: 'successfull',
+      file,
+    });
+  };
 }
 
 export const fileController = new FileController();

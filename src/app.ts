@@ -23,6 +23,7 @@ import {
 } from './middlewares';
 import { createMongo, createS3 } from './database';
 import { bigIntJsonParser } from './utils';
+import { profileRouter } from 'routers/profile';
 
 declare global {
   namespace Express {
@@ -84,6 +85,7 @@ const main = () => {
   app.use('/folder', folderRouter);
   app.use('/drive', driveRouter);
   app.use('/usage', usageRouter);
+  app.use('/profile', profileRouter);
   // error Handler
   app.use(errorHandler);
 

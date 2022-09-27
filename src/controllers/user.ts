@@ -125,6 +125,38 @@ class UserController {
       user,
     });
   }
+
+  me = async (req: Request, res: Response) => {
+    const user = await roleBaseAuth(prisma, req.user);
+    const userProfile = await prisma.user.findUnique({
+      where: {
+        id: user.id,
+      },
+      select: {
+        id: true,
+        userName: true,
+        fullName: true,
+        email: true,
+        profile: {
+          select: {
+            id: true,
+            path: true,
+          },
+        },
+        role: true,
+        usage: {
+          select: {
+            limit: true,
+            used: true,
+          }
+        }
+      }
+    });
+
+    res.json({
+      ...userProfile
+    });
+  }
 }
 
 export const userController = new UserController();

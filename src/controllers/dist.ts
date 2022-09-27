@@ -1,15 +1,13 @@
 import { Request, Response } from 'express';
 import { Access, Role } from '@prisma/client';
-import { nanoid } from 'nanoid';
 import { ValidatedRequest } from 'express-joi-validation';
+import { GetObjectCommand } from '@aws-sdk/client-s3';
 
 import { roleBaseAuth } from '../helpers';
 import { BUCKET_NAME, getS3, prisma } from '../database';
 import { IDeleteDistSchema, IServeDistSchema } from '../schemas';
 import { AuthorizationError } from '../errors';
 import { MESSAGES } from '../constants';
-import category from 'docs/category';
-import { GetObjectCommand } from '@aws-sdk/client-s3';
 
 class DistController {
   /// basic works for {dist routes}
@@ -26,10 +24,8 @@ class DistController {
         route: data.route,
       });
     }
-    const distRoute = nanoid();
     const route = await prisma.distRoute.create({
       data: {
-        route: distRoute,
         user: {
           connect: {
             id: user.id,
@@ -83,7 +79,6 @@ class DistController {
       ...route,
     });
   };
-
   /// dist servings
   serve = async (
     req: ValidatedRequest<IServeDistSchema>,
@@ -102,29 +97,25 @@ class DistController {
         user: true,
       },
     });
-    const distFile = await prisma.distFile.findUniqueOrThrow({
+    const file = await prisma.file.findUniqueOrThrow({
       where: {
-        fileId: id,
+        id: id,
       },
       select: {
         access: true,
-        file: {
-          select: {
-            mimeType: true,
-            path: true,
-            user: true,
-            category: true,
-          },
-        },
+        mimeType: true,
+        path: true,
+        user: true,
+        category: true,
       },
     });
 
-    if (distFile.file.user.id !== distRoute.user.id)
+    if (file.user.id !== distRoute.user.id)
       throw new AuthorizationError(MESSAGES['INSUFFICIENT_PERMISSION']);
 
-    const access = distFile.access;
+    
 
-    if (access === Access.PRIVATE) {
+    if (file.access === Access.PRIVATE) {
       if (!token) throw new AuthorizationError(MESSAGES['UNAUTHORIZED']);
 
       const distToken = await prisma.distToken.findUniqueOrThrow({
@@ -140,7 +131,7 @@ class DistController {
         throw new AuthorizationError(MESSAGES['UNAUTHORIZED']);
 
       const category = distToken.category;
-      const fileCats = distFile.file.category;
+      const fileCats = file.category;
       if (category) {
         const exist = fileCats.find((cat) => cat.id === category.id);
         if (!exist) {
@@ -148,7 +139,6 @@ class DistController {
         }
       }
     }
-    const file = distFile.file;
     res.setHeader('Content-Type', file.mimeType);
     res.setHeader('Accepted-Ranges', 'bytes');
     const s3 = getS3();

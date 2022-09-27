@@ -30,15 +30,34 @@ export const fileUploadParam = Joi.object({
 
 export const fileUpdateBody = Joi.object({
   name: Joi.string().required(),
-  category: Joi.string().required(),
+  category: Joi.array().items(Joi.object({
+    id: Joi.string().required(),
+  })) .required(),
 });
 
 export interface IFileUpdateSchema extends ValidatedRequestSchema {
   [ContainerTypes.Body]: {
     name: string;
-    category: string;
+    category: {
+      id: string;
+    }[];
   };
   [ContainerTypes.Params]: {
     id: string;
   };
 }
+
+export const changeAccessSchema = Joi.object({
+  isPublic: Joi.boolean().required(),
+});
+
+export interface IFileChangeAccessSchema extends ValidatedRequestSchema {
+  [ContainerTypes.Body]: {
+    isPublic: boolean;
+  };
+  [ContainerTypes.Params]: {
+    id: string;
+  };
+}
+
+

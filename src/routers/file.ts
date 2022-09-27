@@ -3,6 +3,7 @@ import { bodyValidator, paramsValidator, upload } from '../middlewares';
 
 import { fileController } from '../controllers';
 import {
+  changeAccessSchema,
   fileServeSchema,
   fileUpdateBody,
   fileUploadParam,
@@ -22,6 +23,14 @@ router.get(
   fileController.details,
 );
 
+router.put(
+  '/access/:id',
+  paramsValidator(fileUploadParam),
+  bodyValidator(changeAccessSchema),
+  fileController.changeAccess,
+);
+
+
 router.delete(
   '/:id',
   paramsValidator(fileServeSchema),
@@ -34,5 +43,6 @@ router.put(
   bodyValidator(fileUpdateBody),
   fileController.update,
 );
+
 
 export const fileRouter = router;

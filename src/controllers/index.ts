@@ -7,3 +7,4 @@ export * from './folder';
 export * from './drive';
 export * from './usage';
 export * from './dist';
+export * from './profile';

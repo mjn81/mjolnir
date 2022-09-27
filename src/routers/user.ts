@@ -7,6 +7,9 @@ const router = Router();
 
 router.post('/', userController.create);
 router.get('/', userController.list);
+
+router.get('/me', userController.me);
+
 router.get(
   '/:id',
   paramsValidator(userDeleteSchema),

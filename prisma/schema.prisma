@@ -21,7 +21,7 @@ model File {
   category  Category[]
   folder    Folder?    @relation(fields: [folderId], references: [id], onDelete: SetNull)
   folderId  String?
-  dist      DistFile?
+  access    Access     @default(PRIVATE)
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
 
@@ -51,11 +51,11 @@ model User {
   usage      Usage?
   createdAt  DateTime    @default(now())
   updatedAt  DateTime    @updatedAt
+  profile    Profile[]
   files      File[]
   categories Category[]
   folders    Folder[]
   distTokens DistToken[]
-  distFiles  DistFile[]
   distRoute  DistRoute?
 
   @@map("user")
@@ -103,7 +103,7 @@ model DistToken {
 
 model DistRoute {
   id        String   @id @unique @default(cuid())
-  route     String   @unique
+  route     String   @unique @default(cuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -112,17 +112,13 @@ model DistRoute {
   @@map("dist_route")
 }
 
-model DistFile {
-  id        String   @id @unique @default(cuid())
-  file      File     @relation(fields: [fileId], references: [id], onDelete: Cascade)
-  fileId    String   @unique
-  access    Access   @default(PRIVATE)
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+model Profile {
+  id       String @id @unique @default(cuid())
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId   String
+  path     String
 
-  @@map("public_file")
+  @@map("profile")
 }
 
 enum Role {

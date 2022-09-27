@@ -12,7 +12,7 @@ export const roleBaseAuth = async (
   roles?: Role[],
 ) => {
   if (!payload) throw new AuthorizationError(MESSAGES['UNAUTHORIZED']);
-  const user = await prisma.users.findUniqueOrThrow({
+  const user = await prisma.user.findUniqueOrThrow({
     where: {
       id: payload.id,
     },

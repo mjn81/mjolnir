@@ -15,7 +15,7 @@ class CategoryController {
     const user = await roleBaseAuth(prisma, req.user);
     const { name } = req.body;
 
-    const category = await prisma.categories.create({
+    const category = await prisma.category.create({
       data: {
         name,
         user: {
@@ -37,7 +37,7 @@ class CategoryController {
     const { id } = req.params;
     const { name } = req.body;
 
-    const category = await prisma.categories.update({
+    const category = await prisma.category.update({
       where: {
         id,
       },
@@ -54,8 +54,8 @@ class CategoryController {
 
   async list(req: Request, res: Response) {
     const user = await roleBaseAuth(prisma, req.user);
-    const count = await prisma.categories.count();
-    const categories = await prisma.categories.findMany({
+    const count = await prisma.category.count();
+    const categories = await prisma.category.findMany({
       where: {
         user: {
           id: user.id,
@@ -79,14 +79,14 @@ class CategoryController {
     await roleBaseAuth(prisma, req.user);
     const { id } = req.params;
 
-    const category = await prisma.categories.findUniqueOrThrow({
+    const category = await prisma.category.findUniqueOrThrow({
       where: {
         id,
       },
       include: {
         _count: {
           select: {
-            Files: true,
+            files: true,
           },
         },
       },
@@ -100,7 +100,7 @@ class CategoryController {
     await roleBaseAuth(prisma, req.user);
     const { id } = req.params;
 
-    const category = await prisma.categories.delete({
+    const category = await prisma.category.delete({
       where: {
         id,
       },

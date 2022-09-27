@@ -33,12 +33,10 @@ export interface IRegisterSchema extends ValidatedRequestSchema {
 
 export const distTokenSchema = Joi.object({
   category: Joi.string().optional(),
-  folder: Joi.string().optional(),
 }).required();
 
 export interface IDistTokenSchema extends ValidatedRequestSchema {
   [ContainerTypes.Body]: {
     category: string;
-    folder: string;
   };
 }

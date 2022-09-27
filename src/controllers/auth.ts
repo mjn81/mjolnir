@@ -17,7 +17,7 @@ class AuthController {
   async login(req: ValidatedRequest<ILoginSchema>, res: Response) {
     const { email, password } = req.body;
 
-    const user = await prisma.users.findUniqueOrThrow({
+    const user = await prisma.user.findUniqueOrThrow({
       where: {
         email,
       },
@@ -56,7 +56,7 @@ class AuthController {
   async register(req: ValidatedRequest<IRegisterSchema>, res: Response) {
     const { fullName, userName, email, password } = req.body;
 
-    const user = await prisma.users.findUnique({
+    const user = await prisma.user.findUnique({
       where: {
         email,
       },
@@ -66,7 +66,7 @@ class AuthController {
 
     const hashedPassword = await hash(password);
 
-    const newUser = await prisma.users.create({
+    const newUser = await prisma.user.create({
       data: {
         fullName,
         userName,
@@ -105,10 +105,7 @@ class AuthController {
 
   async distToken(req: ValidatedRequest<IDistTokenSchema>, res: Response) {
     const user = await roleBaseAuth(prisma, req.user);
-    const { category, folder } = req.body;
-
-    if (!category && !folder)
-      throw new SingleValidationError(MESSAGES['FIELD_EMPTY']);
+    const { category } = req.body;
 
     const token = createDistToken({
       username: user.userName,
@@ -123,15 +120,6 @@ class AuthController {
       },
     };
 
-    if (folder)
-      data = {
-        ...data,
-        folder: {
-          connect: {
-            id: folder,
-          },
-        },
-      };
     if (category)
       data = {
         ...data,
@@ -147,11 +135,6 @@ class AuthController {
       select: {
         token: true,
         category: {
-          select: {
-            name: true,
-          },
-        },
-        folder: {
           select: {
             name: true,
           },

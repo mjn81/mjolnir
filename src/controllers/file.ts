@@ -64,7 +64,7 @@ class FileController {
       },
     });
 
-    const fileData = await prisma.files.create({
+    const fileData = await prisma.file.create({
       data: {
         name: name ?? file.originalname,
         path: key,
@@ -101,7 +101,7 @@ class FileController {
   /// adding diffrent modes 1 - public (for distrobuters) 2 - private
   async serve(req: ValidatedRequest<IFileServeSchema>, res: Response) {
     const { id } = req.params;
-    const file = await prisma.files.findFirstOrThrow({
+    const file = await prisma.file.findFirstOrThrow({
       where: {
         AND: [
           {
@@ -123,7 +123,7 @@ class FileController {
   async delete(req: ValidatedRequest<IFileServeSchema>, res: Response) {
     const user = await roleBaseAuth(prisma, req.user);
     const { id } = req.params;
-    const file = await prisma.files.delete({
+    const file = await prisma.file.delete({
       where: {
         id,
       },
@@ -158,8 +158,8 @@ class FileController {
 
   async list(req: Request, res: Response) {
     const user = await roleBaseAuth(prisma, req.user);
-    const count = await prisma.files.count();
-    const files = await prisma.files.findMany({
+    const count = await prisma.file.count();
+    const files = await prisma.file.findMany({
       where: {
         user: {
           id: user.id,
@@ -185,7 +185,7 @@ class FileController {
   async details(req: ValidatedRequest<IFileServeSchema>, res: Response) {
     await roleBaseAuth(prisma, req.user);
     const { id } = req.params;
-    const file = await prisma.files.findUniqueOrThrow({
+    const file = await prisma.file.findUniqueOrThrow({
       where: {
         id,
       },
@@ -198,7 +198,7 @@ class FileController {
     const user = await roleBaseAuth(prisma, req.user);
     const { id } = req.params;
 
-    await prisma.files.findFirstOrThrow({
+    await prisma.file.findFirstOrThrow({
       where: {
         AND: [
           {
@@ -214,7 +214,7 @@ class FileController {
     });
 
     const { name, category } = req.body;
-    const updatedFile = await prisma.files.update({
+    const updatedFile = await prisma.file.update({
       where: {
         id,
       },

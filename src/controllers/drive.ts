@@ -8,7 +8,7 @@ import { IDriveDetailSchema } from '../schemas';
 class DriveController {
   rootDrive = async (req: Request, res: Response) => {
     const user = await roleBaseAuth(prisma, req.user);
-    const rootFolders = await prisma.folders.findMany({
+    const rootFolders = await prisma.folder.findMany({
       where: {
         AND: {
           user: {
@@ -18,7 +18,7 @@ class DriveController {
         },
       },
     });
-    const rootFiles = await prisma.files.findMany({
+    const rootFiles = await prisma.file.findMany({
       where: {
         AND: {
           user: {
@@ -63,12 +63,12 @@ class DriveController {
   ) => {
     const user = await roleBaseAuth(prisma, req.user);
     const { id } = req.params;
-    const folder = await prisma.folders.findUniqueOrThrow({
+    const folder = await prisma.folder.findUniqueOrThrow({
       where: {
         id: id,
       },
     });
-    const subFolders = await prisma.folders.findMany({
+    const subFolders = await prisma.folder.findMany({
       where: {
         AND: {
           user: {
@@ -81,7 +81,7 @@ class DriveController {
       },
     });
 
-    const subFiles = await prisma.files.findMany({
+    const subFiles = await prisma.file.findMany({
       where: {
         AND: {
           user: {

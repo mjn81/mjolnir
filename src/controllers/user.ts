@@ -19,7 +19,7 @@ class UserController {
     if (!Role[role]) {
       throw new InvalidRoleError(MESSAGES['INVALID_ROLE_ERROR']);
     }
-    const checkUser = await prisma.users.findUnique({
+    const checkUser = await prisma.user.findUnique({
       where: {
         email,
       },
@@ -29,7 +29,7 @@ class UserController {
       throw new SingleValidationError(MESSAGES['USER_EXISTS']);
 
     const hashedPassword = await hash(password);
-    const user = await prisma.users.create({
+    const user = await prisma.user.create({
       data: {
         userName,
         fullName,
@@ -52,8 +52,8 @@ class UserController {
     await roleBaseAuth(prisma, req.user, [Role.ADMIN]);
 
     // phase 3 add pagination
-    const count = await prisma.users.count();
-    const users = await prisma.users.findMany();
+    const count = await prisma.user.count();
+    const users = await prisma.user.findMany();
     return res.send({
       users,
       count,
@@ -66,7 +66,7 @@ class UserController {
     if (user.role !== Role.ADMIN && user.id !== id) {
       throw new InvalidRoleError(MESSAGES['INSUFFICIENT_PERMISSION']);
     }
-    const deleted = await prisma.users.delete({
+    const deleted = await prisma.user.delete({
       where: {
         id,
       },
@@ -81,7 +81,7 @@ class UserController {
   async detail(req: ValidatedRequest<IUserDeleteSchema>, res: Response) {
     await roleBaseAuth(prisma, req.user, [Role.ADMIN]);
     const { id } = req.params;
-    const user = await prisma.users.findUnique({
+    const user = await prisma.user.findUnique({
       where: {
         id,
       },
@@ -107,7 +107,7 @@ class UserController {
       hashedPassword = await hash(password);
     }
 
-    const user = await prisma.users.update({
+    const user = await prisma.user.update({
       where: {
         id,
       },

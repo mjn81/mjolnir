@@ -8,7 +8,7 @@ class FolderController {
   async rootList(req: Request, res: Response) {
     const user = await roleBaseAuth(prisma, req.user);
 
-    const count = await prisma.folders.count({
+    const count = await prisma.folder.count({
       where: {
         AND: {
           user: {
@@ -18,7 +18,7 @@ class FolderController {
         },
       },
     });
-    const folders = await prisma.folders.findMany({
+    const folders = await prisma.folder.findMany({
       where: {
         AND: {
           user: {
@@ -67,7 +67,7 @@ class FolderController {
         },
       };
 
-    const folder = await prisma.folders.create(query);
+    const folder = await prisma.folder.create(query);
     res.send(folder);
   };
 
@@ -145,12 +145,12 @@ class FolderController {
   ) => {
     const user = await roleBaseAuth(prisma, req.user);
     const { id } = req.params;
-    const rootFolder = await prisma.folders.findUniqueOrThrow({
+    const rootFolder = await prisma.folder.findUniqueOrThrow({
       where: {
         id: id,
       },
     });
-    const subFolders = await prisma.folders.findMany({
+    const subFolders = await prisma.folder.findMany({
       where: {
         AND: {
           parent: {

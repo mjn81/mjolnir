@@ -10,75 +10,75 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Files {
-  id           String      @id @unique @default(cuid())
-  name         String
-  path         String
-  mimeType     String
-  category     Categories? @relation(fields: [categoriesId], references: [id], onDelete: SetNull)
-  categoriesId String?
-  user         Users       @relation(fields: [usersId], references: [id], onDelete: Cascade)
-  usersId      String
-  size         Int
-  folder       Folders?    @relation(fields: [foldersId], references: [id], onDelete: SetNull)
-  foldersId    String?
-  createdAt    DateTime    @default(now())
-  updatedAt    DateTime    @updatedAt
+model File {
+  id        String     @id @unique @default(cuid())
+  name      String
+  path      String
+  mimeType  String
+  size      Int
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  category  Category[]
+  folder    Folder?    @relation(fields: [folderId], references: [id], onDelete: SetNull)
+  folderId  String?
+  dist      DistFile?
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
 
   @@map("file")
 }
 
-model Categories {
+model Category {
   id        String      @id @unique @default(cuid())
   name      String
-  user      Users       @relation(fields: [usersId], references: [id], onDelete: Cascade)
+  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
   createdAt DateTime    @default(now())
   updatedAt DateTime    @updatedAt
-  Files     Files[]
-  usersId   String
+  files     File[]
   distToken DistToken[]
 
   @@map("category")
 }
 
-model Users {
-  id         String       @id @unique @default(cuid())
+model User {
+  id         String      @id @unique @default(cuid())
   fullName   String
   userName   String
-  email      String       @unique
+  email      String      @unique
   password   String
-  role       Role         @default(CLIENT)
+  role       Role        @default(CLIENT)
   usage      Usage?
-  createdAt  DateTime     @default(now())
-  updatedAt  DateTime     @updatedAt
-  Files      Files[]
-  Categories Categories[]
-  Folders    Folders[]
-  distToken  DistToken[]
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  files      File[]
+  categories Category[]
+  folders    Folder[]
+  distTokens DistToken[]
+  distFiles  DistFile[]
   distRoute  DistRoute?
 
   @@map("user")
 }
 
-model Folders {
-  id        String      @id @unique @default(cuid())
+model Folder {
+  id        String   @id @unique @default(cuid())
   name      String?
   parentId  String?
-  parent    Folders?    @relation("parents", fields: [parentId], references: [id], onDelete: Cascade)
-  Folders   Folders[]   @relation("parents")
-  user      Users       @relation(fields: [usersId], references: [id], onDelete: Cascade)
-  usersId   String
-  createdAt DateTime    @default(now())
-  updatedAt DateTime    @updatedAt
-  Files     Files[]
-  distToken DistToken[]
+  parent    Folder?  @relation("parents", fields: [parentId], references: [id], onDelete: Cascade)
+  folders   Folder[] @relation("parents")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  files     File[]
 
   @@map("folder")
 }
 
 model Usage {
   id        String   @id @unique @default(cuid())
-  user      Users    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String   @unique
   used      BigInt   @default(0)
   createdAt DateTime @default(now())
@@ -89,16 +89,14 @@ model Usage {
 }
 
 model DistToken {
-  id         String      @id @unique @default(cuid())
-  token      String      @unique
-  category   Categories? @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  id         String    @id @unique @default(cuid())
+  token      String    @unique
+  category   Category? @relation(fields: [categoryId], references: [id], onDelete: Cascade)
   categoryId String?
-  folder     Folders?    @relation(fields: [folderId], references: [id], onDelete: Cascade)
-  folderId   String?
-  user       Users       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId     String
-  createdAt  DateTime    @default(now())
-  updatedAt  DateTime    @updatedAt
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
 
   @@map("dist_token")
 }
@@ -108,13 +106,31 @@ model DistRoute {
   route     String   @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  user      Users    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String   @unique
 
   @@map("dist_route")
 }
 
+model DistFile {
+  id        String   @id @unique @default(cuid())
+  file      File     @relation(fields: [fileId], references: [id], onDelete: Cascade)
+  fileId    String   @unique
+  access    Access   @default(PRIVATE)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("public_file")
+}
+
 enum Role {
   ADMIN
   CLIENT
+}
+
+enum Access {
+  PUBLIC
+  PRIVATE
 }

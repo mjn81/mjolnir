@@ -31,6 +31,7 @@ model File {
 model Category {
   id        String      @id @unique @default(cuid())
   name      String
+  color     String      @db.Char(8) @default("#000000")
   user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
   createdAt DateTime    @default(now())

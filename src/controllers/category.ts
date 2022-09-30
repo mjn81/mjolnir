@@ -13,11 +13,12 @@ import { MESSAGES } from '../constants';
 class CategoryController {
   async create(req: ValidatedRequest<ICatCreateSchema>, res: Response) {
     const user = await roleBaseAuth(prisma, req.user);
-    const { name } = req.body;
+    const { name, color } = req.body;
 
     const category = await prisma.category.create({
       data: {
         name,
+        color,
         user: {
           connect: {
             id: user.id,
@@ -25,7 +26,6 @@ class CategoryController {
         },
       },
     });
-
     res.send({
       message: MESSAGES['CATEGORY_CREATED'],
       category,
@@ -35,7 +35,7 @@ class CategoryController {
   async update(req: ValidatedRequest<ICatUpdateSchema>, res: Response) {
     await roleBaseAuth(prisma, req.user);
     const { id } = req.params;
-    const { name } = req.body;
+    const { name, color } = req.body;
 
     const category = await prisma.category.update({
       where: {
@@ -43,6 +43,7 @@ class CategoryController {
       },
       data: {
         name,
+        color,
       },
     });
 
@@ -61,8 +62,17 @@ class CategoryController {
           id: user.id,
         },
       },
-      include: {
-        _count: true,
+      select: {
+        id: true,
+        name: true,
+        color: true,
+        updatedAt: true,
+        _count: {
+          select: {
+            files: true,
+            distToken: true,
+          },
+        },
       },
       orderBy: {
         updatedAt: 'desc',
@@ -83,10 +93,16 @@ class CategoryController {
       where: {
         id,
       },
-      include: {
+      select: {
+        id: true,
+        color: true,
+        name: true,
+        createdAt: true,
+        updatedAt: true,
         _count: {
           select: {
             files: true,
+            distToken: true,
           },
         },
       },

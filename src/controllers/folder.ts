@@ -192,7 +192,7 @@ class FolderController {
 
     res.json({
       message: 'folder deleted',
-    })
+    });
   };
 }
 

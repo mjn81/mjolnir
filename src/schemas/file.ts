@@ -38,7 +38,6 @@ export interface IFileUploadSchema extends ValidatedRequestSchema {
   };
 }
 
-
 export const fileUpdateParam = Joi.object({
   id: Joi.string().required(),
 });

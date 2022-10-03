@@ -22,14 +22,14 @@ import { Access } from '@prisma/client';
 class FileController {
   async upload(req: ValidatedRequest<IFileUploadSchema>, res: Response) {
     const user = await roleBaseAuth(prisma, req.user);
-    const { name, category ,folder } = req.body;
+    const { name, category, folder } = req.body;
     let tags;
     if (typeof category === 'string') {
       tags = { id: category };
     } else {
       if (category.length === 0)
         throw new ValidationError(MESSAGES['FIELD_EMPTY'], 'category');
-      tags = category.map((c) => ({ id: c })); 
+      tags = category.map((c) => ({ id: c }));
     }
     if (!tags)
       throw new ValidationError(MESSAGES['FIELD_EMPTY'], 'category');
@@ -75,7 +75,7 @@ class FileController {
         used: totalSize,
       },
     });
-    
+
     const fileData = await prisma.file.create({
       data: {
         name: name ?? file.originalname,
@@ -88,7 +88,7 @@ class FileController {
         folder: {
           connect: {
             id: folder,
-          }
+          },
         },
         user: {
           connect: {
@@ -251,7 +251,7 @@ class FileController {
     });
 
     const { name, category } = req.body;
-    const tags = category.map(c => ({ id: c }));
+    const tags = category.map((c) => ({ id: c }));
     const updatedFile = await prisma.file.update({
       where: {
         id,

@@ -30,7 +30,6 @@ export const folderUpdateParam = Joi.object({
   id: Joi.string().required(),
 });
 export const folderUpdateBody = Joi.object({
-  
   name: Joi.string().required(),
 });
 

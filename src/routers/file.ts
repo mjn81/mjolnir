@@ -13,11 +13,7 @@ const router = Router();
 
 router.get('/', fileController.list);
 
-router.post(
-  '/',
-  upload.single('file'),
-  fileController.upload,
-);
+router.post('/', upload.single('file'), fileController.upload);
 
 router.get('/:id', paramsValidator(fileServeSchema), fileController.serve);
 

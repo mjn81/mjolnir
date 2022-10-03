@@ -18,6 +18,8 @@ router.post(
   folderController.create,
 );
 
+router.get('/details/:id' , paramsValidator(folderDetailSchema), folderController.details);
+
 router.get(
   '/:id',
   paramsValidator(folderDetailSchema),

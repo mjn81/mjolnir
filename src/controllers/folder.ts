@@ -172,6 +172,36 @@ class FolderController {
     });
   };
 
+  details = async (
+    req: ValidatedRequest<IFolderDetailSchema>,
+    res: Response,
+  ) => {
+    await roleBaseAuth(prisma, req.user);
+    const { id } = req.params;
+    const folder = await prisma.folder.findUniqueOrThrow({
+      where: {
+        id: id,
+      },
+      select: {
+        name: true,
+        parent: true,
+        user: true,
+        createdAt: true,
+        updatedAt: true,
+        _count: {
+          select: {
+            files: true,
+            folders: true,
+          },
+        },
+      },
+    });
+
+    return res.json({
+      folder,
+    });
+  };
+
   delete = async (
     req: ValidatedRequest<IFolderDetailSchema>,
     res: Response,

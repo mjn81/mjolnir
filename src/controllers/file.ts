@@ -7,7 +7,11 @@ import {
 } from '@aws-sdk/client-s3';
 import { nanoid } from 'nanoid';
 
-import { FileUploadError, ValidationError } from '../errors';
+import {
+  AuthorizationError,
+  FileUploadError,
+  ValidationError,
+} from '../errors';
 import { MESSAGES } from '../constants';
 import { BUCKET_NAME, prisma, getS3 } from '../database';
 import { roleBaseAuth } from '../helpers';
@@ -20,19 +24,13 @@ import {
 import { Access } from '@prisma/client';
 
 class FileController {
-  async upload(req: ValidatedRequest<IFileUploadSchema>, res: Response) {
+  upload = async (
+    req: ValidatedRequest<IFileUploadSchema>,
+    res: Response,
+  ) => {
     const user = await roleBaseAuth(prisma, req.user);
     const { name, category, folder } = req.body;
-    let tags;
-    if (typeof category === 'string') {
-      tags = { id: category };
-    } else {
-      if (category.length === 0)
-        throw new ValidationError(MESSAGES['FIELD_EMPTY'], 'category');
-      tags = category.map((c) => ({ id: c }));
-    }
-    if (!tags)
-      throw new ValidationError(MESSAGES['FIELD_EMPTY'], 'category');
+    const tags = this.checkTag(category);
     const file = req.file;
     if (!file) {
       throw new FileUploadError(MESSAGES['FILE_EMPTY']);
@@ -75,7 +73,7 @@ class FileController {
       },
     });
 
-    let data:any = {
+    let data: any = {
       name: name ?? file.originalname,
       path: key,
       mimeType: file.mimetype,
@@ -83,7 +81,7 @@ class FileController {
       category: {
         connect: tags,
       },
-       
+
       user: {
         connect: {
           id: user.id,
@@ -94,12 +92,12 @@ class FileController {
     if (folder) {
       data = {
         ...data,
-         folder: {
+        folder: {
           connect: {
             id: folder,
           },
         },
-      }
+      };
     }
     const fileData = await prisma.file.create({
       data: data,
@@ -119,7 +117,22 @@ class FileController {
       message: MESSAGES['FILE_UPLOADED'],
       data: fileData,
     });
-  }
+  };
+
+  private checkTag = (category: string | string[]) => {
+    let tags;
+    if (typeof category === 'string') {
+      tags = { id: category };
+    } else {
+      if (category.length === 0)
+        throw new ValidationError(MESSAGES['FIELD_EMPTY'], 'category');
+      tags = category.map((c) => ({ id: c }));
+    }
+    if (!tags)
+      throw new ValidationError(MESSAGES['FIELD_EMPTY'], 'category');
+
+    return tags;
+  };
 
   async serve(req: ValidatedRequest<IFileServeSchema>, res: Response) {
     const user = await roleBaseAuth(prisma, req.user);
@@ -227,14 +240,15 @@ class FileController {
   }
 
   async details(req: ValidatedRequest<IFileServeSchema>, res: Response) {
-    await roleBaseAuth(prisma, req.user);
+    const user = await roleBaseAuth(prisma, req.user);
     const { id } = req.params;
     const file = await prisma.file.findUniqueOrThrow({
       where: {
         id,
       },
     });
-
+    if (file.userId !== user.id)
+      throw new AuthorizationError(MESSAGES['FORBIDDEN']);
     return res.send({ file });
   }
 

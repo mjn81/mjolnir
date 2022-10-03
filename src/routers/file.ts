@@ -6,14 +6,15 @@ import {
   changeAccessSchema,
   fileServeSchema,
   fileUpdateBody,
-  fileUploadParam,
+  fileUpdateParam,
+  fileUploadBody,
 } from '../schemas';
 
 const router = Router();
 
 router.get('/', fileController.list);
 
-router.post('/', upload.single('file'), fileController.upload);
+router.post('/', bodyValidator(fileUploadBody),upload.single('file'), fileController.upload);
 
 router.get('/:id', paramsValidator(fileServeSchema), fileController.serve);
 
@@ -25,7 +26,7 @@ router.get(
 
 router.put(
   '/access/:id',
-  paramsValidator(fileUploadParam),
+  paramsValidator(fileUpdateParam),
   bodyValidator(changeAccessSchema),
   fileController.changeAccess,
 );
@@ -38,7 +39,7 @@ router.delete(
 
 router.put(
   '/:id',
-  paramsValidator(fileUploadParam),
+  paramsValidator(fileUpdateParam),
   bodyValidator(fileUpdateBody),
   fileController.update,
 );

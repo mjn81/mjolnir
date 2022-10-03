@@ -19,4 +19,10 @@ router.get(
   folderController.subFolder,
 );
 
+router.delete(
+  '/:id',
+  paramsValidator(folderDetailSchema),
+  folderController.delete,
+);
+
 export const folderRouter = router;

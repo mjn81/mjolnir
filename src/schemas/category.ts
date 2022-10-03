@@ -17,10 +17,10 @@ export interface ICatCreateSchema extends ValidatedRequestSchema {
 
 export const catUpdateBody = Joi.object({
   name: Joi.string().required(),
+  color: Joi.string().required(),
 }).required();
 export const catUpdateParam = Joi.object({
   id: Joi.string().required(),
-  color: Joi.string().required(),
 }).required();
 
 export interface ICatUpdateSchema extends ValidatedRequestSchema {

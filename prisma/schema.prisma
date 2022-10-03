@@ -19,7 +19,7 @@ model File {
   user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
   category  Category[]
-  folder    Folder?    @relation(fields: [folderId], references: [id], onDelete: SetNull)
+  folder    Folder?    @relation(fields: [folderId], references: [id], onDelete: Cascade)
   folderId  String?
   access    Access     @default(PRIVATE)
   createdAt DateTime   @default(now())

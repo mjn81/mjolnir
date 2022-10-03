@@ -24,27 +24,34 @@ export interface IFileListSchema extends ValidatedRequestSchema {
   };
 }
 
-export const fileUploadParam = Joi.object({
+export const fileUploadBody = Joi.object({
+  name: Joi.string().required(),
+  category: Joi.array().items(Joi.string()).required(),
+  folder: Joi.string().optional(),
+});
+
+export interface IFileUploadSchema extends ValidatedRequestSchema {
+  [ContainerTypes.Body]: {
+    name: string;
+    category: string[];
+    folder?: string;
+  };
+}
+
+
+export const fileUpdateParam = Joi.object({
   id: Joi.string().required(),
 });
 
 export const fileUpdateBody = Joi.object({
   name: Joi.string().required(),
-  category: Joi.array()
-    .items(
-      Joi.object({
-        id: Joi.string().required(),
-      }),
-    )
-    .required(),
+  category: Joi.array().items(Joi.string()).required(),
 });
 
 export interface IFileUpdateSchema extends ValidatedRequestSchema {
   [ContainerTypes.Body]: {
     name: string;
-    category: {
-      id: string;
-    }[];
+    category: string[];
   };
   [ContainerTypes.Params]: {
     id: string;

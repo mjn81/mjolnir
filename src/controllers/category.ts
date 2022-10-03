@@ -75,7 +75,7 @@ class CategoryController {
         },
       },
       orderBy: {
-        updatedAt: 'desc',
+        createdAt: 'desc',
       },
     });
 

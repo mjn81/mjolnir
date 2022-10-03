@@ -83,7 +83,6 @@ class FolderController {
     return { array: lvlArray, index: i - 1 };
   };
 
-  /// phase 3 : refactor
   private creatTree = (folders: any[]) => {
     const maxLevel = folders.at(-1).lvl;
     let res: any = {
@@ -167,6 +166,33 @@ class FolderController {
       ...rootFolder,
       children: subFolders,
     });
+  };
+
+  delete = async (
+    req: ValidatedRequest<IFolderDetailSchema>,
+    res: Response,
+  ) => {
+    const user = await roleBaseAuth(prisma, req.user);
+    const { id } = req.params;
+    const folders: any[] =
+      await prisma.$queryRaw`with recursive foldertree as (
+        select name, id, "parentId"
+        from folder where id = ${id} AND "usersId" = ${user.id}
+        Union
+        select f.name, f.id, f."parentId"
+        from foldertree ft join folder f on ft.id = f."parentId"
+      ) select * from foldertree`;
+    await prisma.folder.deleteMany({
+      where: {
+        id: {
+          in: folders.map((folder) => folder.id),
+        },
+      },
+    });
+
+    res.json({
+      message: 'folder deleted',
+    })
   };
 }
 

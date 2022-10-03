@@ -37,6 +37,6 @@ export const distTokenSchema = Joi.object({
 
 export interface IDistTokenSchema extends ValidatedRequestSchema {
   [ContainerTypes.Body]: {
-    category: string;
+    category?: string;
   };
 }

@@ -25,3 +25,20 @@ export interface IFolderDetailSchema extends ValidatedRequestSchema {
     id: string;
   };
 }
+
+export const folderUpdateParam = Joi.object({
+  id: Joi.string().required(),
+});
+export const folderUpdateBody = Joi.object({
+  
+  name: Joi.string().required(),
+});
+
+export interface IFolderUpdateSchema extends ValidatedRequestSchema {
+  [ContainerTypes.Params]: {
+    id: string;
+  };
+  [ContainerTypes.Body]: {
+    name: string;
+  };
+}

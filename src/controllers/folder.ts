@@ -1,6 +1,10 @@
 import { Request, Response } from 'express';
 import { ValidatedRequest } from 'express-joi-validation';
-import { IFolderCreateSchema, IFolderDetailSchema } from '../schemas';
+import {
+  IFolderCreateSchema,
+  IFolderDetailSchema,
+  IFolderUpdateSchema,
+} from '../schemas';
 import { prisma } from '../database';
 import { roleBaseAuth } from '../helpers';
 
@@ -193,6 +197,27 @@ class FolderController {
     res.json({
       message: 'folder deleted',
     });
+  };
+
+  update = async (
+    req: ValidatedRequest<IFolderUpdateSchema>,
+    res: Response,
+  ) => {
+    const { id } = req.params;
+    const { name } = req.body;
+    const folder = await prisma.folder.update({
+      where: {
+        id: id,
+      },
+      data: {
+        name,
+      },
+      select: {
+        name: true,
+        id: true,
+      },
+    });
+    res.json({ folder });
   };
 }
 

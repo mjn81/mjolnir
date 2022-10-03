@@ -7,7 +7,6 @@ import {
   fileServeSchema,
   fileUpdateBody,
   fileUpdateParam,
-  fileUploadBody,
 } from '../schemas';
 
 const router = Router();
@@ -16,7 +15,6 @@ router.get('/', fileController.list);
 
 router.post(
   '/',
-  bodyValidator(fileUploadBody),
   upload.single('file'),
   fileController.upload,
 );

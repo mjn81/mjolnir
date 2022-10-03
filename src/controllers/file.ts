@@ -37,7 +37,6 @@ class FileController {
     if (!file) {
       throw new FileUploadError(MESSAGES['FILE_EMPTY']);
     }
-
     // check users usage
     const userUsage = await prisma.usage.findUniqueOrThrow({
       where: {
@@ -76,26 +75,34 @@ class FileController {
       },
     });
 
-    const fileData = await prisma.file.create({
-      data: {
-        name: name ?? file.originalname,
-        path: key,
-        mimeType: file.mimetype,
-        size: size,
-        category: {
-          connect: tags,
+    let data:any = {
+      name: name ?? file.originalname,
+      path: key,
+      mimeType: file.mimetype,
+      size: size,
+      category: {
+        connect: tags,
+      },
+       
+      user: {
+        connect: {
+          id: user.id,
         },
-        folder: {
+      },
+    };
+
+    if (folder) {
+      data = {
+        ...data,
+         folder: {
           connect: {
             id: folder,
           },
         },
-        user: {
-          connect: {
-            id: user.id,
-          },
-        },
-      },
+      }
+    }
+    const fileData = await prisma.file.create({
+      data: data,
       select: {
         id: true,
         name: true,

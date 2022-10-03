@@ -24,12 +24,6 @@ export interface IFileListSchema extends ValidatedRequestSchema {
   };
 }
 
-export const fileUploadBody = Joi.object({
-  name: Joi.string().required(),
-  category: Joi.array().items(Joi.string()).required(),
-  folder: Joi.string().optional(),
-});
-
 export interface IFileUploadSchema extends ValidatedRequestSchema {
   [ContainerTypes.Body]: {
     name: string;

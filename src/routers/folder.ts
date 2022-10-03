@@ -1,7 +1,12 @@
 import { folderController } from '../controllers';
 import { Router } from 'express';
 import { bodyValidator, paramsValidator } from '../middlewares';
-import { folderCreateSchema, folderDetailSchema } from '../schemas';
+import {
+  folderCreateSchema,
+  folderDetailSchema,
+  folderUpdateBody,
+  folderUpdateParam,
+} from '../schemas';
 
 const router = Router();
 
@@ -23,6 +28,13 @@ router.delete(
   '/:id',
   paramsValidator(folderDetailSchema),
   folderController.delete,
+);
+
+router.put(
+  '/:id',
+  paramsValidator(folderUpdateParam),
+  bodyValidator(folderUpdateBody),
+  folderController.update,
 );
 
 export const folderRouter = router;

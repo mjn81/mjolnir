@@ -5,9 +5,10 @@ import { GetObjectCommand } from '@aws-sdk/client-s3';
 
 import { roleBaseAuth } from '../helpers';
 import { BUCKET_NAME, getS3, prisma } from '../database';
-import { IDeleteDistSchema, IServeDistSchema } from '../schemas';
+import { IDeleteDistSchema, IDistTokenSchema, IServeDistSchema } from '../schemas';
 import { AuthorizationError } from '../errors';
 import { MESSAGES } from '../constants';
+import { createDistToken } from '../utils';
 
 class DistController {
   /// basic works for {dist routes}
@@ -145,6 +146,80 @@ class DistController {
     const data = await s3.send(new GetObjectCommand(param));
     data.Body.pipe(res);
   };
+
+  async createToken(req: ValidatedRequest<IDistTokenSchema>, res: Response) {
+    const user = await roleBaseAuth(prisma, req.user);
+    const { category } = req.body;
+
+    const token = createDistToken({
+      username: user.userName,
+      id: user.id,
+    });
+    let data: any = {
+      token,
+      user: {
+        connect: {
+          id: user.id,
+        },
+      },
+    };
+
+    if (category)
+      data = {
+        ...data,
+        category: {
+          connect: {
+            id: category,
+          },
+        },
+      };
+
+    const tokenData = await prisma.distToken.create({
+      data: data,
+      select: {
+        token: true,
+        category: {
+          select: {
+            name: true,
+          },
+        },
+      },
+    });
+    let route = await prisma.distRoute.findUnique({
+      where: {
+        userId: user.id,
+      },
+      select: {
+        route: true,
+      },
+    });
+    if (!route) {
+      route = await prisma.distRoute.create({
+        data: {
+          user: {
+            connect: {
+              id: user.id,
+            },
+          },
+        },
+        select: {
+          route: true,
+        },
+      });
+    }
+    res.json({
+      message: MESSAGES['DISTRIBUTOR_TOKEN_SUCCESS'],
+      dist: {
+        ...tokenData,
+        ...route,
+      },
+      user: {
+        id: user.id,
+        userName: user.userName,
+        email: user.email,
+      },
+    });
+  }
 }
 
 export const distController = new DistController();

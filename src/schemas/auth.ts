@@ -30,13 +30,3 @@ export interface IRegisterSchema extends ValidatedRequestSchema {
     password: string;
   };
 }
-
-export const distTokenSchema = Joi.object({
-  category: Joi.string().optional().allow('').allow(null),
-}).required();
-
-export interface IDistTokenSchema extends ValidatedRequestSchema {
-  [ContainerTypes.Body]: {
-    category?: string;
-  };
-}

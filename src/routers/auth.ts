@@ -14,10 +14,4 @@ router.post(
   authController.register,
 );
 
-router.post(
-  '/dist-token',
-  bodyValidator(distTokenSchema),
-  authController.distToken,
-);
-
 export const authRouter = router;

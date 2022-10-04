@@ -32,3 +32,13 @@ export interface IServeDistSchema extends ValidatedRequestSchema {
     route: string;
   };
 }
+
+export const distTokenSchema = Joi.object({
+  category: Joi.string().optional().allow('').allow(null),
+}).required();
+
+export interface IDistTokenSchema extends ValidatedRequestSchema {
+  [ContainerTypes.Body]: {
+    category?: string;
+  };
+}

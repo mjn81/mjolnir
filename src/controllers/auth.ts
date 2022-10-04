@@ -3,14 +3,9 @@ import { ValidatedRequest } from 'express-joi-validation';
 
 import { MESSAGES } from '../constants';
 import { SingleValidationError, ValidationError } from '../errors';
-import { createToken, hashVerify, hash, createDistToken } from '../utils';
+import { createToken, hashVerify, hash } from '../utils';
 import { prisma } from '../database';
-import {
-  IDistTokenSchema,
-  ILoginSchema,
-  IRegisterSchema,
-} from '../schemas';
-import { roleBaseAuth } from '../helpers';
+import { ILoginSchema, IRegisterSchema } from '../schemas';
 
 class AuthController {
   async login(req: ValidatedRequest<ILoginSchema>, res: Response) {
@@ -99,81 +94,6 @@ class AuthController {
       message: MESSAGES['REGISTER_SUCCESS'],
       token,
       user: newUser,
-    });
-  }
-
-  /// move to dist controller
-  async distToken(req: ValidatedRequest<IDistTokenSchema>, res: Response) {
-    const user = await roleBaseAuth(prisma, req.user);
-    const { category } = req.body;
-
-    const token = createDistToken({
-      username: user.userName,
-      id: user.id,
-    });
-    let data: any = {
-      token,
-      user: {
-        connect: {
-          id: user.id,
-        },
-      },
-    };
-
-    if (category)
-      data = {
-        ...data,
-        category: {
-          connect: {
-            id: category,
-          },
-        },
-      };
-
-    const tokenData = await prisma.distToken.create({
-      data: data,
-      select: {
-        token: true,
-        category: {
-          select: {
-            name: true,
-          },
-        },
-      },
-    });
-    let route = await prisma.distRoute.findUnique({
-      where: {
-        userId: user.id,
-      },
-      select: {
-        route: true,
-      },
-    });
-    if (!route) {
-      route = await prisma.distRoute.create({
-        data: {
-          user: {
-            connect: {
-              id: user.id,
-            },
-          },
-        },
-        select: {
-          route: true,
-        },
-      });
-    }
-    res.json({
-      message: MESSAGES['DISTRIBUTOR_TOKEN_SUCCESS'],
-      dist: {
-        ...tokenData,
-        ...route,
-      },
-      user: {
-        id: user.id,
-        userName: user.userName,
-        email: user.email,
-      },
     });
   }
 }

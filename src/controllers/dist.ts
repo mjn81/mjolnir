@@ -5,7 +5,12 @@ import { GetObjectCommand } from '@aws-sdk/client-s3';
 
 import { roleBaseAuth } from '../helpers';
 import { BUCKET_NAME, getS3, prisma } from '../database';
-import { IDeleteDistSchema, IDistTokenSchema, IServeDistSchema } from '../schemas';
+import {
+  IDeleteDistSchema,
+  IDeleteDistTokenSchema,
+  IDistTokenSchema,
+  IServeDistSchema,
+} from '../schemas';
 import { AuthorizationError } from '../errors';
 import { MESSAGES } from '../constants';
 import { createDistToken } from '../utils';
@@ -55,9 +60,7 @@ class DistController {
     });
 
     res.json({
-      dist: {
-        ...distRoute,
-      },
+      ...distRoute,
     });
   };
   deleteRoute = async (
@@ -87,7 +90,6 @@ class DistController {
   ) => {
     const { id, route } = req.params;
     const { token } = req.query;
-
     ///// ADD influx and log user ip + served file & ... inside influx
 
     const distRoute = await prisma.distRoute.findUniqueOrThrow({
@@ -110,7 +112,6 @@ class DistController {
         category: true,
       },
     });
-
     if (file.user.id !== distRoute.user.id)
       throw new AuthorizationError(MESSAGES['INSUFFICIENT_PERMISSION']);
 
@@ -126,13 +127,15 @@ class DistController {
           category: true,
         },
       });
+
       if (distToken.user.id !== distRoute.user.id)
         throw new AuthorizationError(MESSAGES['UNAUTHORIZED']);
-
       const category = distToken.category;
       const fileCats = file.category;
+
       if (category) {
         const exist = fileCats.find((cat) => cat.id === category.id);
+        console.log(exist);
         if (!exist) {
           throw new AuthorizationError(MESSAGES['UNAUTHORIZED']);
         }
@@ -147,7 +150,10 @@ class DistController {
     data.Body.pipe(res);
   };
 
-  async createToken(req: ValidatedRequest<IDistTokenSchema>, res: Response) {
+  createToken = async (
+    req: ValidatedRequest<IDistTokenSchema>,
+    res: Response,
+  ) => {
     const user = await roleBaseAuth(prisma, req.user);
     const { category } = req.body;
 
@@ -219,7 +225,65 @@ class DistController {
         email: user.email,
       },
     });
-  }
+  };
+
+  listToken = async (req: Request, res: Response) => {
+    const user = await roleBaseAuth(prisma, req.user);
+    const tokens = await prisma.distToken.findMany({
+      where: {
+        userId: user.id,
+      },
+      select: {
+        token: true,
+        category: {
+          select: {
+            name: true,
+            color: true,
+            _count: {
+              select: {
+                files: true,
+              },
+            },
+          },
+        },
+        id: true,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+    res.json({
+      tokens,
+    });
+  };
+
+  deleteToken = async (
+    req: ValidatedRequest<IDeleteDistTokenSchema>,
+    res: Response,
+  ) => {
+    const user = await roleBaseAuth(prisma, req.user);
+    const { id } = req.params;
+    const tokenToDelete = await prisma.distToken.findUniqueOrThrow({
+      where: {
+        id: id,
+      },
+      select: {
+        user: true,
+      },
+    });
+    if (tokenToDelete.user.id !== user.id)
+      throw new AuthorizationError(MESSAGES['INSUFFICIENT_PERMISSION']);
+    const token = await prisma.distToken.delete({
+      where: {
+        id: id,
+      },
+    });
+
+    res.json({
+      message: MESSAGES['DISTRIBUTOR_TOKEN_DELETED'],
+      ...token,
+    });
+  };
 }
 
 export const distController = new DistController();

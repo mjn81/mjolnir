@@ -12,6 +12,7 @@ export const MESSAGES = {
   UNAUTHORIZED: 'Unauthorized!!',
   INSUFFICIENT_PERMISSION: 'Insufficient permission!!',
   DISTRIBUTOR_TOKEN_SUCCESS: 'Token successfully generated!!',
+  DISTRIBUTOR_TOKEN_DELETED: 'Token successfully deleted!!',
 
   CATEGORY_CREATED: 'Category created!!',
   CATEGORY_DELETED: 'Category deleted!!',

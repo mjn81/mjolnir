@@ -42,3 +42,13 @@ export interface IDistTokenSchema extends ValidatedRequestSchema {
     category?: string;
   };
 }
+
+export const deleteDistTokenSchema = Joi.object({
+  id: Joi.string().required(),
+}).required();
+
+export interface IDeleteDistTokenSchema extends ValidatedRequestSchema {
+  [ContainerTypes.Params]: {
+    id: string;
+  };
+}

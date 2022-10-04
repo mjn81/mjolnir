@@ -8,6 +8,7 @@ import {
 import { distController } from '../controllers';
 import {
   deleteDistSchema,
+  deleteDistTokenSchema,
   distTokenSchema,
   paramServeDistSchema,
   queryServeDistSchema,
@@ -20,9 +21,17 @@ router.get('/', distController.getRoute);
 router.post('/', distController.createRoute);
 
 router.post(
-  '/dist-token',
+  '/token/',
   bodyValidator(distTokenSchema),
   distController.createToken,
+);
+
+router.get('/token/', distController.listToken);
+
+router.delete(
+  '/token/:id',
+  paramsValidator(deleteDistTokenSchema),
+  distController.deleteToken,
 );
 
 router.delete(

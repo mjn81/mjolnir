@@ -246,10 +246,19 @@ class FileController {
       where: {
         id,
       },
+      include: {
+        category: {
+          select: {
+            id: true,
+            name: true,
+          },
+        }
+      }
+
     });
     if (file.userId !== user.id)
       throw new AuthorizationError(MESSAGES['FORBIDDEN']);
-    return res.send({ file });
+    return res.send({ ...file });
   }
 
   async update(req: ValidatedRequest<IFileUpdateSchema>, res: Response) {
@@ -270,7 +279,6 @@ class FileController {
         ],
       },
     });
-
     const { name, category } = req.body;
     const tags = category.map((c) => ({ id: c }));
     const updatedFile = await prisma.file.update({
@@ -280,7 +288,7 @@ class FileController {
       data: {
         name: name,
         category: {
-          connect: tags,
+          set: tags,
         },
       },
       select: {

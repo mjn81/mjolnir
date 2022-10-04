@@ -38,8 +38,9 @@ export const fileUpdateParam = Joi.object({
 
 export const fileUpdateBody = Joi.object({
   name: Joi.string().required(),
-  category: Joi.array().items(Joi.string()).required(),
+  category: Joi.array().items(Joi.string()),
 });
+
 
 export interface IFileUpdateSchema extends ValidatedRequestSchema {
   [ContainerTypes.Body]: {

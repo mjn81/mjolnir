@@ -22,6 +22,7 @@ export const MESSAGES = {
   FILE_UPDATED: 'File Updated!!',
   FILE_LIMIT_EXCEEDED:
     'It exceeds your file limit! Please buy a better plan.',
+  FOLDER_CREATED: 'Folder created!!',
   INVALID_ROLE_ERROR: 'Invalid role!!',
   USER_EXISTS: 'User already exists!!',
   USER_CREATED: 'User created successfully!!',

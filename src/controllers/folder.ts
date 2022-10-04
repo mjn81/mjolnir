@@ -7,6 +7,7 @@ import {
 } from '../schemas';
 import { prisma } from '../database';
 import { roleBaseAuth } from '../helpers';
+import { MESSAGES } from '../constants';
 
 class FolderController {
   async rootList(req: Request, res: Response) {
@@ -72,7 +73,10 @@ class FolderController {
       };
 
     const folder = await prisma.folder.create(query);
-    res.send(folder);
+    res.send({
+      message: MESSAGES['FOLDER_CREATED'],
+      ...folder
+    });
   };
 
   private trimLevel = (folders: any[], level: number) => {
@@ -198,7 +202,7 @@ class FolderController {
     });
 
     return res.json({
-      folder,
+      ...folder,
     });
   };
 

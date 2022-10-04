@@ -6,7 +6,7 @@ import Joi from 'joi';
 
 export const folderCreateSchema = Joi.object({
   name: Joi.string().required(),
-  parent: Joi.string().optional().allow(null),
+  parent: Joi.string().optional().allow('').allow(null),
 });
 
 export interface IFolderCreateSchema extends ValidatedRequestSchema {

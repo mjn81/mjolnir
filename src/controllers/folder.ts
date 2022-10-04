@@ -75,7 +75,7 @@ class FolderController {
     const folder = await prisma.folder.create(query);
     res.send({
       message: MESSAGES['FOLDER_CREATED'],
-      ...folder
+      ...folder,
     });
   };
 
@@ -134,7 +134,7 @@ class FolderController {
     const folders: any[] =
       await prisma.$queryRaw`with recursive foldertree as (
         select name, id, "parentId", 1 as lvl
-        from folder where id = ${id} AND "usersId" = ${user.id}
+        from folder where id = ${id} AND "userId" = ${user.id}
         Union
         select f.name, f.id, f."parentId" , ft.lvl + 1 as lvl
         from foldertree ft join folder f on ft.id = f."parentId"
@@ -215,7 +215,7 @@ class FolderController {
     const folders: any[] =
       await prisma.$queryRaw`with recursive foldertree as (
         select name, id, "parentId"
-        from folder where id = ${id} AND "usersId" = ${user.id}
+        from folder where id = ${id} AND "userId" = ${user.id}
         Union
         select f.name, f.id, f."parentId"
         from foldertree ft join folder f on ft.id = f."parentId"

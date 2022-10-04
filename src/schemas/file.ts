@@ -41,7 +41,6 @@ export const fileUpdateBody = Joi.object({
   category: Joi.array().items(Joi.string()),
 });
 
-
 export interface IFileUpdateSchema extends ValidatedRequestSchema {
   [ContainerTypes.Body]: {
     name: string;

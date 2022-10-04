@@ -32,7 +32,7 @@ export interface IRegisterSchema extends ValidatedRequestSchema {
 }
 
 export const distTokenSchema = Joi.object({
-  category: Joi.string().optional(),
+  category: Joi.string().optional().allow('').allow(null),
 }).required();
 
 export interface IDistTokenSchema extends ValidatedRequestSchema {

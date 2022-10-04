@@ -252,9 +252,8 @@ class FileController {
             id: true,
             name: true,
           },
-        }
-      }
-
+        },
+      },
     });
     if (file.userId !== user.id)
       throw new AuthorizationError(MESSAGES['FORBIDDEN']);

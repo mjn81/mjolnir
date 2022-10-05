@@ -72,7 +72,11 @@ class FileController {
         used: totalSize,
       },
     });
-    // const type = prisma.
+    const type = await prisma.mimeType.findUnique({
+      where: {
+        extension: file.mimetype,
+      },
+    });
     let data: any = {
       name: name ?? file.originalname,
       path: key,
@@ -82,7 +86,11 @@ class FileController {
       category: {
         connect: tags,
       },
-
+      type: {
+        connect: {
+          id: type?.id,
+        },
+      },
       user: {
         connect: {
           id: user.id,

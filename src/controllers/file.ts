@@ -240,6 +240,12 @@ class FileController {
             name: true,
           },
         },
+        type: {
+          select: {
+            name: true,
+            extension: true,
+          }
+        }
       },
     });
     return res.send({
@@ -260,6 +266,7 @@ class FileController {
           select: {
             id: true,
             name: true,
+            color: true,
           },
         },
       },

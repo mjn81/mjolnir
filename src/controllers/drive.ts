@@ -18,48 +18,8 @@ class DriveController {
         },
       },
     });
-    const rootFiles = await prisma.file.findMany({
-      where: {
-        AND: {
-          user: {
-            id: user.id,
-          },
-          folder: null,
-        },
-      },
-      include: {
-        category: {
-          select: {
-            name: true,
-            color: true,
-          },
-        },
-      },
-    });
-    const folders = rootFolders.map((folder) => {
-      return {
-        ...folder,
-        type: 'folder',
-      };
-    });
-    const files = rootFiles.map((file) => {
-      return {
-        ...file,
-        type: 'file',
-      };
-    });
-
-    const response = [...folders, ...files].sort((a, b) => {
-      if (!a.name || !b.name) return 0;
-      if (a.name < b.name) {
-        return -1;
-      }
-      if (a.name > b.name) {
-        return 1;
-      }
-      return 0;
-    });
-
+    const rootFiles = await this.getFilesForFolder(user.id);
+    const response = this.sortFolderAndFile(rootFolders, rootFiles);
     res.send({
       data: response,
     });
@@ -89,33 +49,59 @@ class DriveController {
       },
     });
 
-    const subFiles = await prisma.file.findMany({
+    const subFiles = await this.getFilesForFolder(user.id, id);
+    const response = this.sortFolderAndFile(subFolders, subFiles);    
+
+    res.send({
+      ...folder,
+      data: response,
+    });
+  };
+
+  private getFilesForFolder = async (
+    userId: string,
+    folderId?: string,
+  ) => {
+    return await prisma.file.findMany({
       where: {
         AND: {
           user: {
-            id: user.id,
+            id: userId,
           },
-          folder: {
-            id: id,
+          folder: folderId ? { id: folderId } : null,
+        },
+      },
+      include: {
+        category: {
+          select: {
+            name: true,
+            color: true,
+          },
+        },
+        type: {
+          select: {
+            name: true,
           },
         },
       },
     });
+  };
 
-    const folders = subFolders.map((folder) => {
+  private sortFolderAndFile = (folders: any[], files: any[]) => {
+    const fo = folders.map((folder) => {
       return {
         ...folder,
-        type: 'folder',
+        form: 'folder',
       };
     });
-    const files = subFiles.map((file) => {
+    const fi = files.map((file) => {
       return {
         ...file,
-        type: 'file',
+        form: 'file',
       };
     });
 
-    const response = [...folders, ...files].sort((a, b) => {
+    const response = [...fo, ...fi].sort((a, b) => {
       if (!a.name || !b.name) return 0;
       if (a.name < b.name) {
         return -1;
@@ -125,12 +111,8 @@ class DriveController {
       }
       return 0;
     });
-
-    res.send({
-      ...folder,
-      data: response,
-    });
-  };
+    return response;
+  }
 }
 
 export const driveController = new DriveController();

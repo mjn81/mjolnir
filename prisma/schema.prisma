@@ -15,6 +15,8 @@ model File {
   name      String
   path      String
   mimeType  String
+  type      MimeType? @relation(fields: [typeId], references: [id])  
+  typeId    String?
   size      Int
   user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
@@ -28,10 +30,21 @@ model File {
   @@map("file")
 }
 
+model MimeType {
+  id        String   @id @unique @default(cuid())
+  name      String 
+  extension String   @unique
+  file      File[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("mime_type")
+}
+
 model Category {
   id        String      @id @unique @default(cuid())
   name      String
-  color     String      @db.Char(8) @default("#000000")
+  color     String      @default("#000000") @db.Char(8)
   user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
   createdAt DateTime    @default(now())
@@ -114,10 +127,10 @@ model DistRoute {
 }
 
 model Profile {
-  id       String @id @unique @default(cuid())
-  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId   String
-  path     String
+  id     String @id @unique @default(cuid())
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+  path   String
 
   @@map("profile")
 }

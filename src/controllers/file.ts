@@ -72,11 +72,12 @@ class FileController {
         used: totalSize,
       },
     });
-
+    // const type = prisma.
     let data: any = {
       name: name ?? file.originalname,
       path: key,
       mimeType: file.mimetype,
+
       size: size,
       category: {
         connect: tags,

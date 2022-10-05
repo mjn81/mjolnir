@@ -33,7 +33,7 @@ class DriveController {
             name: true,
             color: true,
           },
-        }
+        },
       },
     });
     const folders = rootFolders.map((folder) => {

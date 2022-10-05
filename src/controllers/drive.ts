@@ -27,6 +27,14 @@ class DriveController {
           folder: null,
         },
       },
+      include: {
+        category: {
+          select: {
+            name: true,
+            color: true,
+          },
+        }
+      },
     });
     const folders = rootFolders.map((folder) => {
       return {

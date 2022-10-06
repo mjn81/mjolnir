@@ -244,8 +244,8 @@ class FileController {
           select: {
             name: true,
             extension: true,
-          }
-        }
+          },
+        },
       },
     });
     return res.send({

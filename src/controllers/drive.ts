@@ -50,7 +50,7 @@ class DriveController {
     });
 
     const subFiles = await this.getFilesForFolder(user.id, id);
-    const response = this.sortFolderAndFile(subFolders, subFiles);    
+    const response = this.sortFolderAndFile(subFolders, subFiles);
 
     res.send({
       ...folder,
@@ -112,7 +112,7 @@ class DriveController {
       return 0;
     });
     return response;
-  }
+  };
 }
 
 export const driveController = new DriveController();
